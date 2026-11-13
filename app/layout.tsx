@@ -26,15 +26,26 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://deskflowai-tau.vercel.app"),
   title: "DeskFlow AI — Your 24/7 Business Operations Assistant",
   description:
     "DeskFlow AI — Your Business Never Misses a Customer. A 24/7 AI receptionist that answers messages, books appointments, captures leads and hands off to your team.",
   icons: { icon: "/favicon.svg" },
+  alternates: { canonical: "/" },
   openGraph: {
     title: "DeskFlow AI — Your 24/7 Business Operations Assistant",
     description:
       "Your Business Never Misses a Customer. A 24/7 AI receptionist for modern businesses.",
     type: "website",
+    url: "https://deskflowai-tau.vercel.app",
+    siteName: "DeskFlow AI",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "DeskFlow AI — Your Business Never Misses a Customer" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DeskFlow AI — Your 24/7 Business Operations Assistant",
+    description: "Your Business Never Misses a Customer. A 24/7 AI receptionist for modern businesses.",
+    images: ["/og-image.png"],
   },
 };
 

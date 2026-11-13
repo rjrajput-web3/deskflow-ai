@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PLANS, SITE } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Pricing — DeskFlow AI",
+  description:
+    "Clear plans with clear reply limits: Starter $19, Growth $49, Pro $99 per month, Agency custom. No unlimited promises, no hidden fees. DeskFlow AI is in pre-launch — join the waitlist.",
+  alternates: { canonical: "/pricing" },
+};
 
 const COMPARISON: { label: string; values: string[] }[] = [
   { label: "WhatsApp channels", values: ["1 channel", "1 channel + live chat", "WhatsApp + live chat · voice AI (Roadmap)", "Multi-workspace"] },
@@ -20,15 +28,15 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "What happens if I go over my monthly limit?",
-    a: "Limits and billing are confirmed at signup. In general, the receptionist pauses automatic replies once the plan's monthly reply limit is reached, and you can upgrade to a higher plan to continue.",
+    a: "Limits and billing will be confirmed when signup opens. In general, the receptionist pauses automatic replies once the plan's monthly reply limit is reached, and you can upgrade to a higher plan to continue.",
   },
   {
     q: "Which countries does DeskFlow AI work in?",
-    a: "DeskFlow AI works wherever WhatsApp Business and Meta's WhatsApp Cloud API are available. Limits and billing are confirmed at signup for your region.",
+    a: "DeskFlow AI works wherever WhatsApp Business and Meta's WhatsApp Cloud API are available. Limits and billing will be confirmed when signup opens for your region.",
   },
   {
     q: "Can I cancel my plan?",
-    a: "Yes. Limits and billing, including cancellation terms, are confirmed at signup. There is no long-term lock-in promised here — check the terms shown when you activate.",
+    a: "Yes. Limits and billing, including cancellation terms, will be confirmed when signup opens. There is no long-term lock-in promised here — check the terms shown when you activate.",
   },
   {
     q: "Do I need my own WhatsApp Business number?",
@@ -48,6 +56,10 @@ export default function PricingPage() {
         <p className="lead mt-5 max-w-2xl anim-fade-up">
           Every plan states exactly how many AI replies you get each month. Pick the size
           that fits your message volume — upgrade any time as you grow.
+        </p>
+        <p className="mt-4 max-w-2xl rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3 text-sm leading-relaxed text-amber-900 anim-fade-up">
+          DeskFlow AI is in pre-launch — join the waitlist and we&rsquo;ll open your
+          workspace when your region goes live.
         </p>
       </section>
 
@@ -98,7 +110,7 @@ export default function PricingPage() {
           WhatsApp, AI and voice usage is metered within the reply limits above — no plan
           includes unlimited usage, and there are no hidden fees beyond the plan price.
           Voice AI is on the roadmap and not included in any plan yet. Exact limits and
-          billing are confirmed at signup.
+          billing will be confirmed when signup opens.
         </p>
       </section>
 

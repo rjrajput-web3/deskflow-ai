@@ -19,6 +19,12 @@ export default function WaitlistForm() {
       setError("Please fill in your email, business name and industry.");
       return;
     }
+    // Validate the email format before opening the mailto — "abc" is not an
+    // email, and a malformed address would silently never reach us.
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError("Please enter a valid work email address (e.g. you@yourbusiness.com).");
+      return;
+    }
     // No backend yet: keep a local record AND open the visitor's email app
     // with a pre-filled request addressed to us — that is how the request
     // actually reaches us. Never claim it was "sent" when it only sits here.

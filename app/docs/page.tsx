@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Docs — DeskFlow AI",
+  description:
+    "Setup guides, step by step: Meta WhatsApp Cloud API sandbox, knowledge base training, Google Calendar connection and n8n webhooks. Every guide says plainly what needs your own live account.",
+  alternates: { canonical: "/docs" },
+};
 
 type Guide = {
   id: string;

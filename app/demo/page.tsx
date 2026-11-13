@@ -5,7 +5,8 @@ import { SITE } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Live Demo — DeskFlow AI",
   description:
-    "Try the DeskFlow AI WhatsApp receptionist live: pick an industry, send a message, and watch it quote prices, book appointments and sync to Calendar and n8n. Simulated demo.",
+    "Try the DeskFlow AI WhatsApp receptionist live: pick an industry, send a message, and watch it quote prices, book appointments and see them in the Calendar & n8n drawer. Simulated demo.",
+  alternates: { canonical: "/demo" },
 };
 
 export default function DemoPage() {

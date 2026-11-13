@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Integrations — DeskFlow AI",
+  description:
+    "DeskFlow AI connects to Meta WhatsApp Cloud API, Google Calendar, n8n webhooks and website live chat. Statuses are labelled honestly — what is live, what is a demo, and what is still on the roadmap.",
+  alternates: { canonical: "/integrations" },
+};
 
 type Integration = {
   name: string;

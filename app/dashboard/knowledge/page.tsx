@@ -9,6 +9,7 @@ export default function KnowledgePage() {
   const [textTitle, setTextTitle] = useState("");
   const [textBody, setTextBody] = useState("");
   const [notice, setNotice] = useState("");
+  const [formError, setFormError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => setWs(getWorkspace()), []);
@@ -20,7 +21,23 @@ export default function KnowledgePage() {
   };
 
   const addUrl = () => {
-    if (!url.trim()) return;
+    setFormError("");
+    if (!url.trim()) {
+      setFormError("Please enter a website URL.");
+      return;
+    }
+    // Validate as a real http(s) URL — "not-a-url" is not a Website doc.
+    let parsed: URL;
+    try {
+      parsed = new URL(url.trim());
+    } catch {
+      setFormError("That does not look like a valid URL — please enter a full address starting with https://.");
+      return;
+    }
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      setFormError("Please enter a full http:// or https:// URL.");
+      return;
+    }
     refresh(addKnowledgeDoc({
       id: newId("doc"), title: `Website — ${url.trim()}`, kind: "url",
       content: `Source: ${url.trim()} — (demo: page text is not fetched yet; paste the key facts as text below so the sandbox can answer from them.)`,
@@ -65,6 +82,7 @@ export default function KnowledgePage() {
       </div>
 
       {notice && <div className="rounded-xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm font-medium text-brand-700">{notice}</div>}
+      {formError && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{formError}</div>}
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="card card-pad">
@@ -86,7 +104,7 @@ export default function KnowledgePage() {
           <h2 className="font-display text-lg font-bold text-ink-950">Upload a file</h2>
           <p className="mt-1 text-sm text-slate-500">.txt / .md files are read in your browser and stored locally. PDFs are not parsed in this demo yet.</p>
           <input
-            ref={fileRef} type="file" accept=".txt,.md,.pdf" className="input mt-4"
+            ref={fileRef} type="file" accept=".txt,.md" className="input mt-4" aria-label="Upload a .txt or .md file"
             onChange={(e) => void onFile(e.target.files?.[0])}
           />
           <p className="mt-3 text-xs text-slate-400">Files stay in this browser (demo). Nothing is uploaded to a server.</p>

@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { INDUSTRIES } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Industries — DeskFlow AI",
+  description:
+    "AI receptionist presets for dental clinics, hotels, restaurants, salons, real estate, auto services and online stores — plus Custom Business. Try each one in the live demo.",
+  alternates: { canonical: "/industries" },
+};
 
 export default function IndustriesPage() {
   return (

@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ONBOARDING_STEPS } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "How It Works — DeskFlow AI",
+  description:
+    "From signup to a live AI receptionist in seven steps: configure your business, connect WhatsApp, train the AI, test it, then switch it on. DeskFlow AI is in pre-launch.",
+  alternates: { canonical: "/how-it-works" },
+};
 
 export default function HowItWorksPage() {
   return (
@@ -13,6 +21,10 @@ export default function HowItWorksPage() {
         <p className="lead mt-5 max-w-2xl anim-fade-up">
           No code, no hardware, no long setup project. Configure your business once,
           train the AI on your own information, test it — then switch it on.
+        </p>
+        <p className="mt-4 max-w-2xl rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3 text-sm leading-relaxed text-amber-900 anim-fade-up">
+          DeskFlow AI is in pre-launch — join the waitlist and we&rsquo;ll open your
+          workspace when your region goes live.
         </p>
       </section>
 

@@ -1,4 +1,8 @@
 -- DeskFlow AI — Supabase schema (Sprint 2, docs only — no live DB yet).
+-- This DDL is the documented target only. The live site runs in demo mode
+-- (localStorage-backed store, `lib/store.ts`) until the Supabase integration
+-- is built (client + env vars + auth) — configuring env vars alone today
+-- would change nothing: no Supabase client exists in the code yet.
 --
 -- PostgreSQL DDL for the 8 core tables. Run in the Supabase SQL editor when
 -- the Supabase step lands. NO auth dependency in this DDL: there is no

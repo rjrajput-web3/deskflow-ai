@@ -56,8 +56,11 @@ export default function Home() {
                 Yes please, that works.
               </div>
               <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-white px-4 py-3 text-sm shadow-sm ring-1 ring-slate-200">
-                <p className="flex items-center gap-2 font-semibold text-ink-950">
+                <p className="flex flex-wrap items-center gap-2 font-semibold text-ink-950">
                   <span aria-hidden="true">✅</span> Booking confirmed
+                  <span className="rounded-full bg-brand-600 px-2 py-0.5 text-[10px] font-bold text-white">
+                    Demo booking — provisional
+                  </span>
                 </p>
                 <p className="mt-1 text-slate-600">Teeth cleaning / scaling</p>
                 <p className="text-slate-600">Thursday · 10:30 AM</p>

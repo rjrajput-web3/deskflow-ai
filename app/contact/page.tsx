@@ -203,7 +203,7 @@ export default function ContactPage() {
               </li>
               <li className="flex items-start gap-2.5">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">2</span>
-                We read every enquiry that reaches us and reply as soon as we can.
+                We confirm the right plan and reply with next steps.
               </li>
               <li className="flex items-start gap-2.5">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">3</span>

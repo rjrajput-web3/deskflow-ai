@@ -2,9 +2,9 @@
 
 **Product:** DeskFlow AI — Your 24/7 Business Operations Assistant
 **Tagline:** "Your Business Never Misses a Customer."
-**Live site:** https://deskflowai.vercel.app (target; see Deployment)
+**Live site:** https://deskflowai-tau.vercel.app
 **Repo:** https://github.com/rjrajput-web3/deskflow-ai (public, MIT)
-**Owner:** Smart Start Guides / Rohit Rajput (brand identity only — zero PII on public pages)
+**Owner:** Smart Start Guides (brand identity only — zero PII on public pages)
 
 ## 1. Vision
 
@@ -127,8 +127,8 @@ behaviour pre-configured.
 Tables (see `docs/supabase-schema.sql`): `workspaces`, `services`,
 `knowledge_docs`, `conversations`, `leads`, `appointments`, `subscriptions`,
 `usage_logs`. All workspace-scoped (multi-tenant). The live site runs in
-**demo mode** (localStorage-backed store, `lib/store.ts`) until Supabase env
-vars are configured — no auth gates, no login wall.
+**demo mode** (localStorage-backed store, `lib/store.ts`) until the Supabase
+integration is built (client + env vars + auth) — no auth gates, no login wall.
 
 ## 10. What needs the user's step (not built yet)
 
@@ -147,14 +147,14 @@ vars are configured — no auth gates, no login wall.
   "reply within 1 business day" promise anywhere.
 - Calendar sync: demo bookings are provisional; real Google Calendar sync is
   a Pro integration set up after onboarding (never "automatic" today).
-- Demo responder: hotel bookings use stay dates/nights (no clock time);
-  service names render cleanly ("Deluxe room (per night)"); voice-note
-  reschedule creates a matching booking card + counts in the ⚡ drawer.
+- Demo responder: real-estate bookings are free tours and online-store
+  bookings are delivery slots (no clock-time stays); voice-note reschedule
+  creates a matching booking card + counts in the ⚡ drawer.
 - One canonical name per business everywhere (Oakridge Dental Studio,
   Harborview Realty, Velour Salon & Spa, Kinetix Gear, Custom Business);
   dental hours Mon–Sat 10 AM–8 PM, Sun closed, everywhere.
 - One seeded dataset: Overview 14-day totals = Analytics (396 / 46 / 31);
-  CRM 5 leads / $603 pipeline / 4 conversations; funnel conversion from the
+  CRM 5 leads / $558 pipeline / 4 conversations; funnel conversion from the
   funnel itself (2 of 4 = 50%). All seeded appointments inside opening hours
   (store key bumped to v2 so old seeds are replaced).
 - Industries: Online Stores preset built for real + Custom Business card;

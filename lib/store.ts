@@ -98,11 +98,27 @@ export function getAppointments(): Appointment[] {
   return getWorkspace().appointments;
 }
 
+/** Parse "h:mm AM/PM" to minutes since midnight (audit #15: string sort
+ * puts "9:00 AM" after "10:30 AM"). Invalid input sorts as 0. */
+export function parseTimeMinutes(time: string): number {
+  const m = time.trim().match(/^(\d{1,2})(?::(\d{2}))?\s*([AaPp])[Mm]?$/);
+  if (!m) return 0;
+  let h = parseInt(m[1], 10);
+  const mins = parseInt(m[2] ?? "0", 10);
+  if (/^[Pp]/.test(m[3]) && h !== 12) h += 12;
+  if (/^[Aa]/.test(m[3]) && h === 12) h = 0;
+  return h * 60 + mins;
+}
+
+/** Sort by date, then by real time of day (not by time string). */
+export function compareAppointments(a: Appointment, b: Appointment): number {
+  if (a.date !== b.date) return a.date.localeCompare(b.date);
+  return parseTimeMinutes(a.time) - parseTimeMinutes(b.time);
+}
+
 export function addAppointment(appt: Appointment): Appointment[] {
   const ws = getWorkspace();
-  ws.appointments = [...ws.appointments, appt].sort((a, b) =>
-    `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`),
-  );
+  ws.appointments = [...ws.appointments, appt].sort(compareAppointments);
   saveWorkspace(ws);
   return ws.appointments;
 }

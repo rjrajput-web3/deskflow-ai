@@ -13,6 +13,7 @@ export default function LeadsPage() {
   const [email, setEmail] = useState("");
   const [value, setValue] = useState("");
   const [source, setSource] = useState("WhatsApp");
+  const [formError, setFormError] = useState("");
 
   useEffect(() => setWs(getWorkspace()), []);
   if (!ws) return <p className="text-sm text-slate-500">Loading demo workspace…</p>;
@@ -24,9 +25,19 @@ export default function LeadsPage() {
   const refresh = (next: Lead[]) => setWs({ ...ws, leads: next });
 
   const submitLead = () => {
-    if (!name.trim()) return;
+    // Show an inline error instead of silently doing nothing (audit #13).
+    if (!name.trim()) {
+      setFormError("Please enter a name for the lead.");
+      return;
+    }
+    // A blank email stays blank — never invent demo@example.com for a real name.
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setFormError("Please enter a valid email address, or leave it blank.");
+      return;
+    }
+    setFormError("");
     refresh(addLead({
-      id: newId("lead"), name: name.trim(), email: email.trim() || "demo@example.com",
+      id: newId("lead"), name: name.trim(), email: email.trim(),
       source, status: "New", value: Number(value) || 0, notes: "",
       createdAt: new Date().toISOString().slice(0, 10),
     }));
@@ -93,8 +104,8 @@ export default function LeadsPage() {
           <div className="card card-pad">
             <h2 className="font-display text-lg font-bold text-ink-950">Add lead</h2>
             <div className="mt-4 space-y-3">
-              <input className="input" placeholder="Name (fictional demo only)" value={name} onChange={(e) => setName(e.target.value)} />
-              <input className="input" placeholder="Email (demo)" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input className="input" placeholder="Name (fictional demo only)" value={name} onChange={(e) => setName(e.target.value)} aria-label="Lead name" />
+              <input className="input" type="email" placeholder="Email (demo)" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="Lead email" />
               <div className="flex gap-2">
                 <select className="input min-w-0 flex-1" value={source} onChange={(e) => setSource(e.target.value)}>
                   <option>WhatsApp</option>
@@ -103,6 +114,9 @@ export default function LeadsPage() {
                 </select>
                 <input className="input w-28 min-w-0 shrink-0" type="number" min={0} placeholder="$ value" value={value} onChange={(e) => setValue(e.target.value)} />
               </div>
+              {formError && (
+                <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{formError}</p>
+              )}
               <button type="button" className="btn-primary w-full !py-2.5 text-sm" onClick={submitLead}>+ Add lead</button>
             </div>
           </div>

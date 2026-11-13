@@ -1,10 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FEATURES } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Features — DeskFlow AI",
+  description:
+    "Everything the DeskFlow AI receptionist does: 24/7 replies, knowledge base training, appointment booking, lead CRM, automated follow-ups, human handoff and daily owner reports.",
+  alternates: { canonical: "/features" },
+};
 
 const CAPABILITIES: Record<string, string[]> = {
   "24/7 AI Receptionist": [
     "Replies in seconds, day and night — including weekends and holidays",
-    "Answers in the customer's language from your business information",
+    "Answers in English from your business information",
     "Knows your opening hours, services and prices before it replies",
     "Flags urgent messages for your team right away",
   ],
@@ -16,7 +24,7 @@ const CAPABILITIES: Record<string, string[]> = {
   ],
   "Appointment Booking": [
     "Books, confirms and reschedules appointments in the chat",
-    "Checks real availability before offering a time slot",
+    "Offers the next open slot in the demo — real availability checks arrive with the live calendar connection",
     "Sends automatic reminders to reduce no-shows",
     "Adds confirmed bookings to your calendar once connected (Pro integration, set up after onboarding)",
   ],
@@ -73,7 +81,7 @@ function Visual({ title }: { title: string }) {
               <span className="rounded-full bg-brand-100 px-2.5 py-0.5 text-xs font-semibold text-brand-700">Trained</span>
             </div>
           ))}
-          <p className="pt-1 text-xs text-slate-500">3 sources · 128 answers grounded in your business info</p>
+          <p className="pt-1 text-xs text-slate-500">3 sources · example answers grounded in your business info</p>
         </div>
       );
     case "Appointment Booking":
@@ -206,8 +214,11 @@ export default function FeaturesPage() {
             </div>
             <div className={i % 2 === 1 ? "lg:order-1" : ""}>
               <div className="card card-pad bg-gradient-to-br from-slate-50 to-brand-50/60">
-                <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                <p className="mb-4 flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-slate-400">
                   {feature.title}
+                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-normal text-slate-500">
+                    Example
+                  </span>
                 </p>
                 <Visual title={feature.title} />
               </div>

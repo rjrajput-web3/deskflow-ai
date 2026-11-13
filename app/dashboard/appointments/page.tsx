@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getWorkspace, addAppointment, newId, type Workspace } from "@/lib/store";
+import { getWorkspace, addAppointment, newId, compareAppointments, type Workspace } from "@/lib/store";
 
 function localISO(d: Date): string {
   const y = d.getFullYear();
@@ -64,7 +64,7 @@ export default function AppointmentsPage() {
     setCustomer(""); setAmount("");
   };
 
-  const sorted = [...ws.appointments].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+  const sorted = [...ws.appointments].sort(compareAppointments);
 
   return (
     <div className="space-y-8">
