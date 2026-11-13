@@ -63,6 +63,9 @@ export type DayStat = {
 };
 
 export type Workspace = {
+  /** Seed version — the store resets ONLY when this differs from the
+   * current seed (never on a rename or hours change; see lib/store.ts). */
+  seedVersion: number;
   businessName: string;
   tagline: string;
   services: Service[];
@@ -131,6 +134,10 @@ export function seedWorkspace(): Workspace {
   const today = daysAgo(0);
   const tuesday = daysAgo(-3);
   return {
+    // Seed version 2 (2026-11-14): Oakridge Dental Studio seed. Bump this
+    // ONLY when the seed itself must replace saved workspaces; renames and
+    // hours edits never change it, so they never wipe saved data.
+    seedVersion: 2,
     businessName: "BrightSmile Dental Studio",
     tagline: "Gentle, modern dentistry — same-week appointments.",
     services: [

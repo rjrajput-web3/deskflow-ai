@@ -45,3 +45,8 @@ body { @apply bg-white text-ink-950 font-sans antialiased; }
 .anim-shake { animation: gentleShake 4s ease-in-out infinite; transform-origin: center; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+/* Promo pill reserve (audit #3): while the mobile 50% OFF pill is up, the
+   page gets bottom padding on small screens so no CTA can sit under it. */
+@media (max-width: 767px) {
+  body.promo-pill-space { padding-bottom: 64px; }
+}

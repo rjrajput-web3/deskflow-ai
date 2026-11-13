@@ -20,6 +20,8 @@ export type { Workspace, Lead, LeadStatus, Appointment, Conversation, KnowledgeD
 
 // v2: seed changed 2026-11-14 (canonical business names + hours, in-hours
 // appointments) — a new key so older saved seeds are replaced, not kept.
+// Reset rule lives in getWorkspace(): only a seedVersion mismatch resets;
+// renames and hours edits are saved data, never a reset trigger.
 const KEY = "deskflow-demo-workspace-v2";
 
 function clone<T>(v: T): T {
@@ -36,15 +38,24 @@ export function getWorkspace(): Workspace {
       return seed;
     }
     const parsed = JSON.parse(raw) as Workspace;
-    // Backfill any missing top-level keys so older seeds stay usable.
-    // If the saved seed is from an older version (different business name or
-    // hours), replace it with the current seed instead of mixing old + new.
     const seed = seedWorkspace();
-    if (parsed.businessName !== seed.businessName || parsed.hours !== seed.hours) {
+    // FIX (audit #1): never reset on a rename or hours change. The old code
+    // compared mutable fields (businessName / hours) against the seed and
+    // wiped the whole saved workspace on any mismatch. Now only a seed
+    // VERSION mismatch resets; anything else is backfilled key-by-key.
+    // Saved workspaces written before seedVersion existed have no version
+    // field — they came from the current seed, so backfill the version
+    // instead of resetting them.
+    if (typeof parsed.seedVersion === "number" && parsed.seedVersion !== seed.seedVersion) {
       window.localStorage.setItem(KEY, JSON.stringify(seed));
       return seed;
     }
-    return { ...seed, ...parsed };
+    const merged: Workspace = { ...seed, ...parsed, seedVersion: seed.seedVersion };
+    // Persist the backfill so later loads see a complete workspace.
+    if (parsed.seedVersion !== seed.seedVersion) {
+      window.localStorage.setItem(KEY, JSON.stringify(merged));
+    }
+    return merged;
   } catch {
     return seedWorkspace();
   }
