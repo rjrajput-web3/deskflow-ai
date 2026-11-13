@@ -21,6 +21,41 @@ type BookedEvent = {
   payload: ReturnType<typeof buildN8nPayload>;
 };
 
+/** Simulator slug -> /api/demo-chat business id (the API mirrors the full
+ * WhatsApp demo's ids: dental / realestate / salon / ecommerce / custom). */
+const API_BUSINESS_ID: Record<string, string> = {
+  dental: "dental",
+  "real-estate": "realestate",
+  salons: "salon",
+  "online-stores": "ecommerce",
+  custom: "custom",
+};
+
+/** Seed unread counts, matching the full WhatsApp demo's list. */
+const SEED_UNREAD: Record<string, number> = {
+  dental: 2,
+  "real-estate": 1,
+  salons: 3,
+  "online-stores": 1,
+  custom: 0,
+};
+
+type ApiBooking = {
+  service: string;
+  dayLabel: string;
+  dayOffset: number;
+  time: string;
+  amount: string;
+  amountLabel?: string;
+  reschedule?: boolean;
+};
+
+type ApiChatResponse = {
+  reply?: string;
+  booking?: ApiBooking;
+  engine?: string;
+};
+
 let idCounter = 1000;
 function nextId(prefix: string) {
   idCounter += 1;
@@ -29,6 +64,10 @@ function nextId(prefix: string) {
 
 function nowTime() {
   return new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false });
+}
+
+function newRef() {
+  return `DF-${String(Math.floor(100000 + Math.random() * 900000))}`;
 }
 
 function lastPreview(messages: ChatMessage[]) {
@@ -40,14 +79,71 @@ function lastPreview(messages: ChatMessage[]) {
   return last.text;
 }
 
+/** "Tomorrow, 11:00 AM" -> { dayLabel, dayOffset, time } for the API's
+ * reschedule context (the API needs the current booking's day + time). */
+function splitDateTime(dateTime: string): { dayLabel: string; dayOffset: number; time: string } {
+  const [dayLabel = "Tomorrow", time = ""] = dateTime.split(", ");
+  if (dayLabel === "Today") return { dayLabel, dayOffset: 0, time };
+  if (dayLabel === "Tomorrow") return { dayLabel, dayOffset: 1, time };
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const target = days.indexOf(dayLabel);
+  if (target < 0) return { dayLabel, dayOffset: 1, time };
+  return { dayLabel, dayOffset: (target - new Date().getDay() + 7) % 7, time };
+}
+
+/** API booking -> simulator booking card. Tours show "Free tour" as the
+ * amount (the property price is in the reply text); deliveries show the
+ * product price. */
+function apiBookingToCard(api: ApiBooking, slug: string): BookingDetails {
+  return {
+    service: api.service,
+    dateTime: `${api.dayLabel}, ${api.time}`,
+    amount: api.amountLabel ?? api.amount,
+    ref: newRef(),
+    label: slug === "real-estate" ? "Tour" : slug === "online-stores" ? "Delivery slot" : undefined,
+  };
+}
+
+/** Short WebAudio tone for the voice-note play button — no audio asset
+ * needed. Two soft beeps, ~0.5s total. */
+function playVoiceTone() {
+  try {
+    const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AC) return;
+    const ctx = new AC();
+    const now = ctx.currentTime;
+    [660, 520].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      const start = now + i * 0.22;
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.12, start + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.2);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.22);
+    });
+    window.setTimeout(() => void ctx.close(), 800);
+  } catch {
+    // Audio unavailable — the transcript below the player still shows.
+  }
+}
+
+const ENGINE_LABELS: Record<string, string> = {
+  deterministic: "instant grounded reply",
+  gemini: "live AI · Gemini",
+  pollinations: "live AI · Pollinations",
+  "local-fallback": "local fallback",
+  local: "local keyword reply",
+};
+
 export default function WhatsAppSimulator() {
   const [activeSlug, setActiveSlug] = useState("dental");
   const [threads, setThreads] = useState<Record<string, ChatMessage[]>>(() => seedThreads());
-  const [unread, setUnread] = useState<Record<string, boolean>>(() => {
-    const out: Record<string, boolean> = {};
-    for (const b of DEMO_BUSINESSES) out[b.slug] = b.slug !== "dental";
-    return out;
-  });
+  const [unread, setUnread] = useState<Record<string, number>>(() => ({ ...SEED_UNREAD }));
   const [query, setQuery] = useState("");
   const [unreadOnly, setUnreadOnly] = useState(false);
   const [input, setInput] = useState("");
@@ -56,6 +152,7 @@ export default function WhatsAppSimulator() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [flowOpen, setFlowOpen] = useState(false);
+  const [lastEngine, setLastEngine] = useState<string | null>(null);
 
   const timers = useRef<number[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -63,6 +160,22 @@ export default function WhatsAppSimulator() {
   useEffect(() => {
     const ids = timers.current;
     return () => ids.forEach((id) => window.clearTimeout(id));
+  }, []);
+
+  // Deep link: /demo?business=<slug> preselects the business (audit #10).
+  // Industry cards link here; switching tabs updates the param too.
+  useEffect(() => {
+    try {
+      const param = new URLSearchParams(window.location.search).get("business");
+      if (param && DEMO_BUSINESSES.some((b) => b.slug === param)) {
+        setActiveSlug(param);
+        setUnread((prev) => ({ ...prev, [param]: 0 }));
+      }
+    } catch {
+      // ignore
+    }
+    // Run once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const business = getBusiness(activeSlug);
@@ -79,34 +192,102 @@ export default function WhatsAppSimulator() {
 
   function selectBusiness(slug: string) {
     setActiveSlug(slug);
-    setUnread((prev) => ({ ...prev, [slug]: false }));
+    setUnread((prev) => ({ ...prev, [slug]: 0 }));
     setTyping(false);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("business", slug);
+      window.history.replaceState(null, "", url.toString());
+    } catch {
+      // ignore
+    }
   }
 
   function appendMessage(slug: string, message: ChatMessage) {
     setThreads((prev) => ({ ...prev, [slug]: [...(prev[slug] ?? []), message] }));
   }
 
+  function bookingsContext(): ApiBooking[] {
+    return bookings.map((b) => {
+      const { dayLabel, dayOffset, time } = splitDateTime(b.booking.dateTime);
+      return { service: b.booking.service, dayLabel, dayOffset, time, amount: b.booking.amount };
+    });
+  }
+
+  /** Live AI path: POST /api/demo-chat (deterministic -> Gemini ->
+   * Pollinations -> local fallback on the server). 4s client timeout, then
+   * the local keyword engine answers instead — the demo never stalls. */
+  async function callDemoChat(
+    slug: string,
+    userText: string,
+  ): Promise<{ text: string; booking?: BookingDetails; engine: string } | null> {
+    const target = getBusiness(slug);
+    const thread = threads[slug] ?? [];
+    const history = thread.slice(-6).map((m) => ({
+      role: m.sender === "customer" ? "user" : "assistant",
+      text: m.kind === "voice" ? VOICE_NOTE_TEXT : m.text,
+    }));
+    const ctrl = new AbortController();
+    const timer = window.setTimeout(() => ctrl.abort(), 4000);
+    try {
+      const res = await fetch("/api/demo-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          businessId: API_BUSINESS_ID[slug] ?? slug,
+          message: userText,
+          history,
+          bookings: bookingsContext(),
+        }),
+        signal: ctrl.signal,
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as ApiChatResponse;
+      if (!data.reply) return null;
+      return {
+        text: data.reply,
+        booking: data.booking ? apiBookingToCard(data.booking, slug) : undefined,
+        engine: data.engine ?? "local-fallback",
+      };
+    } catch {
+      return null;
+    } finally {
+      window.clearTimeout(timer);
+    }
+  }
+
   function scheduleReply(slug: string, userText: string) {
     const target = getBusiness(slug);
+    const startedAt = Date.now();
     setTyping(true);
-    later(900, () => {
-      const { text, booking } = generateReply(target, userText);
-      setTyping(false);
-      const reply: ChatMessage = {
-        id: nextId("m"),
-        sender: "business",
-        kind: booking ? "booking" : "text",
-        text,
-        time: nowTime(),
-        booking,
-      };
-      appendMessage(slug, reply);
-      if (booking) {
-        const payload = buildN8nPayload(target, booking, userText);
-        setBookings((prev) => [...prev, { business: target.name, booking, payload }]);
-      }
-    });
+    void (async () => {
+      const live = await callDemoChat(slug, userText);
+      // Keep the typing indicator visible at least ~600 ms so the reply
+      // never flashes in instantly; the demo's real first-reply delay is ~1s.
+      const wait = Math.max(0, 600 - (Date.now() - startedAt));
+      later(wait, () => {
+        setTyping(false);
+        const { text, booking } =
+          live ?? (() => {
+            const r = generateReply(target, userText);
+            return { text: r.text, booking: r.booking };
+          })();
+        setLastEngine(live ? live.engine : "local");
+        const reply: ChatMessage = {
+          id: nextId("m"),
+          sender: "business",
+          kind: booking ? "booking" : "text",
+          text,
+          time: nowTime(),
+          booking,
+        };
+        appendMessage(slug, reply);
+        if (booking) {
+          const payload = buildN8nPayload(target, booking, userText);
+          setBookings((prev) => [...prev, { business: target.name, booking, payload }]);
+        }
+      });
+    })();
   }
 
   function sendMessage(rawText: string) {
@@ -152,24 +333,38 @@ export default function WhatsAppSimulator() {
         [slug]: (prev[slug] ?? []).map((m) => (m.id === voiceMsg.id ? { ...m, status: "read" } : m)),
       }));
     });
+    const startedAt = Date.now();
     setTyping(true);
-    later(1100, () => {
-      setTyping(false);
-      // The reply and the booking card ALWAYS agree: the reschedule reply
-      // comes with a booking card for the same service, date and time, and
-      // it counts in the ⚡ Calendar & n8n drawer like any other booking.
-      const { text, booking } = voiceNoteResponse(target);
-      appendMessage(slug, {
-        id: nextId("m"),
-        sender: "business",
-        kind: "booking",
-        text,
-        time: nowTime(),
-        booking,
+    void (async () => {
+      // The voice note is a reschedule request — the API's deterministic
+      // engine moves the latest booking; fallback is the local rescheduler.
+      const live = await callDemoChat(slug, VOICE_NOTE_TEXT);
+      const wait = Math.max(0, 700 - (Date.now() - startedAt));
+      later(wait, () => {
+        setTyping(false);
+        // The reply and the booking card ALWAYS agree: the reschedule reply
+        // comes with a booking card for the same service, date and time, and
+        // it counts in the ⚡ Calendar & n8n drawer like any other booking.
+        const { text, booking } =
+          live && live.booking
+            ? { text: live.text, booking: live.booking }
+            : (() => {
+                const r = voiceNoteResponse(target);
+                return { text: r.text, booking: r.booking };
+              })();
+        setLastEngine(live ? live.engine : "local");
+        appendMessage(slug, {
+          id: nextId("m"),
+          sender: "business",
+          kind: "booking",
+          text,
+          time: nowTime(),
+          booking,
+        });
+        const payload = buildN8nPayload(target, booking, VOICE_NOTE_TEXT);
+        setBookings((prev) => [...prev, { business: target.name, booking, payload }]);
       });
-      const payload = buildN8nPayload(target, booking, VOICE_NOTE_TEXT);
-      setBookings((prev) => [...prev, { business: target.name, booking, payload }]);
-    });
+    })();
   }
 
   function resetConversation() {
@@ -180,7 +375,7 @@ export default function WhatsAppSimulator() {
   }
 
   const filtered = DEMO_BUSINESSES.filter((b) => {
-    if (unreadOnly && !unread[b.slug]) return false;
+    if (unreadOnly && !(unread[b.slug] > 0)) return false;
     if (query.trim() && !b.name.toLowerCase().includes(query.trim().toLowerCase())) return false;
     return true;
   });
@@ -270,9 +465,9 @@ export default function WhatsAppSimulator() {
                       </span>
                       <span className="block truncate text-xs text-slate-500">{lastPreview(thread)}</span>
                     </span>
-                    {unread[b.slug] && (
+                    {unread[b.slug] > 0 && (
                       <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-brand-600 px-1.5 text-[11px] font-bold text-white">
-                        1
+                        {unread[b.slug]}
                       </span>
                     )}
                   </button>
@@ -352,7 +547,7 @@ export default function WhatsAppSimulator() {
                 is never hidden under the header or scrolled away */}
             <div className="border-b border-slate-200 bg-white px-3 py-2 text-center">
               <p className="mx-auto w-fit rounded-full bg-amber-100 px-3 py-1 text-[11px] font-semibold text-amber-800">
-                Demo chat — simulated replies, no real messages are sent
+                Live simulation — simulated data, provisional bookings
               </p>
             </div>
             <div ref={scrollRef} className="h-[440px] space-y-3 overflow-y-auto bg-[#ECE5DD] px-3 py-4 sm:h-[480px]">
@@ -369,9 +564,15 @@ export default function WhatsAppSimulator() {
                     >
                       {m.kind === "voice" ? (
                         <span className="flex items-center gap-2">
-                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-white" aria-hidden="true">
+                          <button
+                            type="button"
+                            onClick={playVoiceTone}
+                            aria-label="Play voice note (simulated tone)"
+                            title="Play voice note"
+                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition hover:bg-brand-700"
+                          >
                             ▶
-                          </span>
+                          </button>
                           <span aria-hidden="true">🎤</span>
                           <span className="font-medium">0:04</span>
                           <span className="text-slate-400">▂▄▆▇▆▄▂</span>
@@ -470,6 +671,11 @@ export default function WhatsAppSimulator() {
           <p className="mt-4 max-w-[420px] text-center text-sm text-slate-500">
             {business.tagline} Hours: {business.hours}. Prices shown are in USD.
           </p>
+          {lastEngine && (
+            <p className="mt-1 max-w-[420px] text-center text-xs text-slate-400">
+              Last reply: {ENGINE_LABELS[lastEngine] ?? lastEngine} · simulated data, provisional bookings
+            </p>
+          )}
         </div>
       </div>
 
@@ -515,7 +721,7 @@ export default function WhatsAppSimulator() {
                   </ul>
                   {latestPayload && (
                     <>
-                      <h3 className="mb-2 mt-5 text-sm font-bold text-ink-950">Live n8n webhook payload (latest booking)</h3>
+                      <h3 className="mb-2 mt-5 text-sm font-bold text-ink-950">Simulated n8n webhook payload (latest booking)</h3>
                       <pre className="max-h-80 overflow-auto whitespace-pre-wrap break-words rounded-xl bg-ink-950 p-4 text-xs leading-relaxed text-green-300">
                         {JSON.stringify(latestPayload, null, 2)}
                       </pre>

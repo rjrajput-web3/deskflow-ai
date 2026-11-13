@@ -21,7 +21,12 @@ export default function DemoPage() {
           — all in seconds, exactly as your customers would experience it.
         </p>
         <p className="mt-4">
-          <span className="badge-demo">Demo — simulated replies</span>
+          <span className="badge-demo">Live simulation — simulated data, provisional bookings</span>
+        </p>
+        <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-500">
+          Replies come from a live AI path when available — grounded in each
+          business&rsquo;s real prices and hours — with an instant local fallback.
+          Nothing here books a real appointment or sends a real message.
         </p>
       </header>
 

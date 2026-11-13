@@ -2,6 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { INDUSTRIES } from "@/lib/site";
 
+/** Industry -> simulator business (audit #10). Only the four businesses in
+ * the simulator deep-link; the rest land on the demo's default business. */
+const DEMO_LINK: Record<string, string> = {
+  dental: "/demo?business=dental",
+  "real-estate": "/demo?business=real-estate",
+  salons: "/demo?business=salons",
+  "online-stores": "/demo?business=online-stores",
+};
+
+function demoLink(slug: string): string {
+  return DEMO_LINK[slug] ?? "/demo";
+}
+
 export const metadata: Metadata = {
   title: "Industries — DeskFlow AI",
   description:
@@ -33,7 +46,7 @@ export default function IndustriesPage() {
                 {industry.icon}
               </span>
               <Link
-                href="/demo"
+                href={demoLink(industry.slug)}
                 className="rounded-full bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-700 transition hover:bg-brand-100"
               >
                 Try this industry in the live demo →
@@ -72,7 +85,7 @@ export default function IndustriesPage() {
           <div className="flex items-start justify-between gap-4">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-100 text-2xl">✨</span>
             <Link
-              href="/demo"
+              href="/demo?business=custom"
               className="rounded-full bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-brand-700"
             >
               Try Custom Business in the demo →
@@ -93,7 +106,7 @@ export default function IndustriesPage() {
             ))}
           </ul>
           <div className="mt-auto pt-6">
-            <Link href="/demo" className="btn-accent">Try the Custom Business demo →</Link>
+            <Link href="/demo?business=custom" className="btn-accent">Try the Custom Business demo →</Link>
           </div>
         </article>
       </section>
