@@ -48,7 +48,7 @@ export default function RevenuePage() {
             <div key={m.month} className="flex flex-1 flex-col items-center gap-1.5" title={`${m.month}: $${m.demoRevenue} real revenue, ${m.workspaces} workspaces`}>
               <span className="text-[10px] font-semibold text-slate-500">${m.demoRevenue}</span>
               <div className="flex h-28 w-full items-end justify-center rounded-t-md bg-slate-100">
-                <div className="w-2/3 rounded-t-md bg-brand-500" style={{ height: `${Math.max(4, (m.workspaces / 6) * 100)}%` }} title={`${m.workspaces} demo workspaces`} />
+                <div className="w-2/3 rounded-t-md bg-brand-500" style={{ height: `${Math.max(4, Math.round((m.workspaces / 6) * 104))}px` }} title={`${m.workspaces} demo workspaces`} />
               </div>
               <span className="text-[10px] text-slate-400">{m.month}</span>
               <span className="text-[10px] font-semibold text-slate-500">{m.workspaces} ws</span>

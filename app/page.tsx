@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import WaitlistForm from "@/components/WaitlistForm";
 import { FEATURES, INDUSTRIES, ONBOARDING_STEPS, PLANS } from "@/lib/site";
@@ -37,7 +38,7 @@ export default function Home() {
         <div className="anim-fade-up anim-floaty">
           <Link href="/demo" className="card block overflow-hidden" aria-label="See the live demo">
             <div className="flex items-center gap-3 border-b border-slate-200 bg-[#075E54] px-5 py-3.5 text-white">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500 font-display text-sm font-bold">DF</span>
+              <Image src="/logo.svg" alt="DeskFlow AI" width={40} height={40} className="h-10 w-10 rounded-full" />
               <div>
                 <p className="text-sm font-semibold leading-tight">DeskFlow AI</p>
                 <p className="text-xs text-white/80">Online · replies instantly</p>

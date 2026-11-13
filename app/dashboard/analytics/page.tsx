@@ -11,7 +11,7 @@ function Bars({ data, color }: { data: Array<{ label: string; value: number }>; 
       {data.map((d) => (
         <div key={d.label} className="flex flex-1 flex-col items-center gap-1.5" title={`${d.label}: ${d.value}`}>
           <span className="text-[10px] font-semibold text-slate-500">{d.value}</span>
-          <div className={`w-full rounded-t-md ${color}`} style={{ height: `${Math.max(6, (d.value / max) * 100)}%` }} />
+          <div className={`w-full rounded-t-md ${color}`} style={{ height: `${Math.max(8, Math.round((d.value / max) * 104))}px` }} />
           <span className="text-[10px] text-slate-400">{d.label}</span>
         </div>
       ))}

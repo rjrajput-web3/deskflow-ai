@@ -76,7 +76,7 @@ export default function DashboardOverview() {
                 <span className="text-[10px] font-semibold text-slate-500">{d.messages}</span>
                 <div
                   className="w-full rounded-t-md bg-brand-500"
-                  style={{ height: `${Math.max(6, (d.messages / maxMsg) * 100)}%` }}
+                  style={{ height: `${Math.max(8, Math.round((d.messages / maxMsg) * 104))}px` }}
                 />
                 <span className="text-[10px] text-slate-400">{d.label}</span>
               </div>

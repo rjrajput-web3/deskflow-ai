@@ -182,7 +182,7 @@ export default function WhatsAppSimulator() {
   return (
     <div>
       {/* Industry pills — visible on all sizes, scrollable on mobile */}
-      <div className="no-scrollbar mb-5 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Choose an industry">
+      <div className="no-scrollbar mb-5 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible" role="tablist" aria-label="Choose an industry">
         {DEMO_BUSINESSES.map((b) => {
           const active = b.slug === activeSlug;
           return (
