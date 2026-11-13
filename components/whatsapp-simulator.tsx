@@ -586,7 +586,7 @@ export default function WhatsAppSimulator() {
                           <span className="mt-2 block rounded-xl border border-brand-100 bg-brand-50 p-3 text-[13px]">
                             <span className="mb-1 flex items-center justify-between gap-2">
                               <span className="font-bold text-ink-950">Booking confirmed ✓</span>
-                              <span className="rounded-full bg-brand-600 px-2 py-0.5 text-[10px] font-bold text-white">
+                              <span className="shrink-0 whitespace-nowrap rounded-full bg-brand-600 px-2 py-0.5 text-[10px] font-bold text-white">
                                 Demo booking — provisional
                               </span>
                             </span>
