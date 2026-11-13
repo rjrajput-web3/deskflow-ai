@@ -164,13 +164,15 @@ export default function WhatsAppSimulator() {
 
   // Deep link: /demo?business=<slug> preselects the business (audit #10).
   // Industry cards link here; switching tabs updates the param too.
+  // The pre-selected chat on load has no unread badge — same as the demo
+  // site (its seed sets dental.unread = 0 for the pre-selected chat).
   useEffect(() => {
     try {
       const param = new URLSearchParams(window.location.search).get("business");
-      if (param && DEMO_BUSINESSES.some((b) => b.slug === param)) {
-        setActiveSlug(param);
-        setUnread((prev) => ({ ...prev, [param]: 0 }));
-      }
+      const initial =
+        param && DEMO_BUSINESSES.some((b) => b.slug === param) ? param : "dental";
+      setActiveSlug(initial);
+      setUnread((prev) => ({ ...prev, [initial]: 0 }));
     } catch {
       // ignore
     }
