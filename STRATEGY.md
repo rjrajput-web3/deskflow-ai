@@ -139,3 +139,40 @@ vars are configured — no auth gates, no login wall.
   built-in mock responder to live Gemini responses.
 - Payhip: no DeskFlow product exists there — link Gumroad only (verified
   2026-11-13; do not invent a Payhip URL).
+
+## 11. QA fix pass — 2026-11-14 (independent audit, all 13 gaps + 3 new reqs)
+
+- Honest copy only: no backend exists yet — waitlist/contact open the
+  visitor's mail app (mailto xyzcryp0@gmail.com) + localStorage backup; no
+  "reply within 1 business day" promise anywhere.
+- Calendar sync: demo bookings are provisional; real Google Calendar sync is
+  a Pro integration set up after onboarding (never "automatic" today).
+- Demo responder: hotel bookings use stay dates/nights (no clock time);
+  service names render cleanly ("Deluxe room (per night)"); voice-note
+  reschedule creates a matching booking card + counts in the ⚡ drawer.
+- One canonical name per business everywhere (BrightSmile Dental Studio,
+  The Harborview Hotel, Olive & Oak Bistro, Glow Studio Salon, Skyline
+  Property Group, Apex Auto Care, Everline Store, Custom Business);
+  dental hours Mon–Sat 9 AM–6 PM, Sun closed, everywhere.
+- One seeded dataset: Overview 14-day totals = Analytics (396 / 46 / 31);
+  CRM 5 leads / $603 pipeline / 4 conversations; funnel conversion from the
+  funnel itself (2 of 4 = 50%). All seeded appointments inside opening hours
+  (store key bumped to v2 so old seeds are replaced).
+- Industries: Online Stores preset built for real + Custom Business card;
+  footer links anchor to each card.
+- /terms + /privacy added and linked in the footer.
+- Mobile: no horizontal page scroll (overflow-x clip + min-w-0 fixes),
+  dashboard headers wrap, week grid stacks on phones, setup/appointments
+  forms stack, demo disclaimer sits above the chat scroll area, industry
+  pills have a scroll fade + hint.
+- Reveal animation uses `backwards` fill + reduced-motion override — content
+  is visible by default.
+- Voice AI labelled "Roadmap" everywhere it appears; no plan includes it.
+- Docs point to the real Dashboard → Integrations page (new in Sprint 2);
+  "arrives with the Supabase step" wording replaced with honest status.
+- Drawer Close buttons sit above a plain-div overlay (always clickable);
+  webhook JSON wraps; ⚡ counter is session-wide with per-business counts.
+- 50% OFF side popup (Home/Demo/Pricing, desktop + mobile): real DeskFlow
+  logo, gentle shake, × dismiss (session), click opens the Gumroad BUY page.
+- Simulation banner links are real: Gumroad template + full WhatsApp demo,
+  both new tab.

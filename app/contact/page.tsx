@@ -37,11 +37,27 @@ export default function ContactPage() {
       const list = Array.isArray(existing) ? existing : [existing];
       list.push(payload);
       localStorage.setItem("deskflow-contact", JSON.stringify(list));
-      setError("");
-      setSubmitted(true);
     } catch {
-      setError("Your enquiry could not be saved in this browser. Please try again.");
+      // Local storage unavailable — mailto below still delivers the enquiry.
     }
+    // No backend yet: open the visitor's email app with the enquiry pre-filled
+    // and addressed to us. The enquiry reaches us only when they press Send.
+    const subject = `DeskFlow AI enquiry — ${businessName.trim()} (${planInterest})`;
+    const body = [
+      "Hi DeskFlow AI team,",
+      "",
+      `Name: ${name.trim()}`,
+      `Business: ${businessName.trim()}`,
+      `Work email: ${workEmail.trim()}`,
+      `Plan interest: ${planInterest}`,
+      `Join waitlist: ${joinWaitlist ? "Yes" : "No"}`,
+      "",
+      "Message:",
+      message.trim(),
+    ].join("\n");
+    window.location.href = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setError("");
+    setSubmitted(true);
   }
 
   function handleReset() {
@@ -74,10 +90,15 @@ export default function ContactPage() {
           {submitted ? (
             <div className="card card-pad text-center">
               <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-100 text-2xl text-brand-700">✓</span>
-              <h2 className="h-display mt-5 text-2xl">Thanks — your enquiry is saved.</h2>
+              <h2 className="h-display mt-5 text-2xl">Your email app should now be open.</h2>
               <p className="mx-auto mt-3 max-w-md leading-relaxed text-slate-600">
-                We aim to reply within 1 business day at the work email you provided
-                ({workEmail}). Your enquiry is stored in this browser for now.
+                Press <strong className="text-ink-950">Send</strong> in your email app to deliver
+                your enquiry to {SITE.contactEmail} — that is what actually sends it to us.
+                We also saved a copy in this browser.
+              </p>
+              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-500">
+                If no email app opened, email {SITE.contactEmail} directly. We read every
+                enquiry that reaches us and reply as soon as we can.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link href="/demo" className="btn-accent">Try Live Demo →</Link>
@@ -164,8 +185,8 @@ export default function ContactPage() {
                 Send enquiry →
               </button>
               <p className="text-xs leading-relaxed text-slate-500">
-                Enquiries are sent to {SITE.contactEmail}. Your details are stored locally in
-                this browser until the enquiry is processed.
+                Your enquiry opens in your email app, addressed to {SITE.contactEmail} — send
+                it from there. A copy is also saved in this browser.
               </p>
             </form>
           )}
@@ -182,7 +203,7 @@ export default function ContactPage() {
               </li>
               <li className="flex items-start gap-2.5">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">2</span>
-                We reply within 1 business day with next steps.
+                We read every enquiry that reaches us and reply as soon as we can.
               </li>
               <li className="flex items-start gap-2.5">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">3</span>
@@ -190,7 +211,7 @@ export default function ContactPage() {
               </li>
             </ul>
             <p className="mt-5 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
-              We aim to reply within 1 business day.
+              We reply to every enquiry that reaches us.
             </p>
           </div>
           <div className="card card-pad bg-gradient-to-br from-brand-50 to-white">

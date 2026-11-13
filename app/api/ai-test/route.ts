@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     const services = Array.isArray(body?.services) ? (body.services as ServiceInput[]) : [];
     const knowledge = String(body?.knowledge ?? "");
     const businessName = String(body?.businessName ?? "our business");
-    const hours = String(body?.hours ?? "Mon–Sat, 10 AM–8 PM");
+    const hours = String(body?.hours ?? "Mon–Sat, 9 AM–6 PM");
 
     if (!message) {
       return NextResponse.json({ error: "message is required" }, { status: 400 });

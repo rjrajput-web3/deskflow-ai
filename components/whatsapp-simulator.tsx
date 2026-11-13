@@ -5,12 +5,12 @@ import { SITE } from "@/lib/site";
 import {
   DEMO_BUSINESSES,
   FLOW_STAGES,
-  VOICE_NOTE_REPLY,
   VOICE_NOTE_TEXT,
   buildN8nPayload,
   generateReply,
   getBusiness,
   seedThreads,
+  voiceNoteResponse,
   type BookingDetails,
   type ChatMessage,
 } from "@/lib/demo-data";
@@ -136,6 +136,7 @@ export default function WhatsAppSimulator() {
   function sendVoiceNote() {
     if (typing) return;
     const slug = activeSlug;
+    const target = getBusiness(slug);
     const voiceMsg: ChatMessage = {
       id: nextId("m"),
       sender: "customer",
@@ -154,13 +155,20 @@ export default function WhatsAppSimulator() {
     setTyping(true);
     later(1100, () => {
       setTyping(false);
+      // The reply and the booking card ALWAYS agree: the reschedule reply
+      // comes with a booking card for the same service, date and time, and
+      // it counts in the ⚡ Calendar & n8n drawer like any other booking.
+      const { text, booking } = voiceNoteResponse(target);
       appendMessage(slug, {
         id: nextId("m"),
         sender: "business",
-        kind: "text",
-        text: VOICE_NOTE_REPLY,
+        kind: "booking",
+        text,
         time: nowTime(),
+        booking,
       });
+      const payload = buildN8nPayload(target, booking, VOICE_NOTE_TEXT);
+      setBookings((prev) => [...prev, { business: target.name, booking, payload }]);
     });
   }
 
@@ -181,27 +189,34 @@ export default function WhatsAppSimulator() {
 
   return (
     <div>
-      {/* Industry pills — visible on all sizes, scrollable on mobile */}
-      <div className="no-scrollbar mb-5 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible" role="tablist" aria-label="Choose an industry">
-        {DEMO_BUSINESSES.map((b) => {
-          const active = b.slug === activeSlug;
-          return (
-            <button
-              key={b.slug}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => selectBusiness(b.slug)}
-              className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                active
-                  ? "border-brand-600 bg-brand-600 text-white shadow-lg shadow-brand-600/25"
-                  : "border-slate-300 bg-white text-ink-950 hover:border-ink-950"
-              }`}
-            >
-              {b.icon} {b.name}
-            </button>
-          );
-        })}
+      {/* Industry pills — scrollable on mobile with a visible scroll hint */}
+      <div className="relative mb-5">
+        <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible" role="tablist" aria-label="Choose an industry">
+          {DEMO_BUSINESSES.map((b) => {
+            const active = b.slug === activeSlug;
+            return (
+              <button
+                key={b.slug}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => selectBusiness(b.slug)}
+                className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                  active
+                    ? "border-brand-600 bg-brand-600 text-white shadow-lg shadow-brand-600/25"
+                    : "border-slate-300 bg-white text-ink-950 hover:border-ink-950"
+                }`}
+              >
+                {b.icon} {b.name}
+              </button>
+            );
+          })}
+        </div>
+        {/* Right-edge fade + hint so mobile visitors see there are more industries */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent lg:hidden" />
+        <p aria-hidden="true" className="mt-1 text-right text-xs font-medium text-slate-400 lg:hidden">
+          Scroll → {DEMO_BUSINESSES.length} industries + Custom Business
+        </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)] lg:items-start">
@@ -333,11 +348,14 @@ export default function WhatsAppSimulator() {
               </div>
             </div>
 
-            {/* Chat thread */}
-            <div ref={scrollRef} className="h-[440px] space-y-3 overflow-y-auto bg-[#ECE5DD] px-3 py-4 sm:h-[480px]">
-              <p className="mx-auto w-fit rounded-full bg-white/80 px-3 py-1 text-center text-[11px] font-medium text-slate-500 shadow-sm">
+            {/* Chat thread — the demo disclaimer sits ABOVE the scroll area so it
+                is never hidden under the header or scrolled away */}
+            <div className="border-b border-slate-200 bg-white px-3 py-2 text-center">
+              <p className="mx-auto w-fit rounded-full bg-amber-100 px-3 py-1 text-[11px] font-semibold text-amber-800">
                 Demo chat — simulated replies, no real messages are sent
               </p>
+            </div>
+            <div ref={scrollRef} className="h-[440px] space-y-3 overflow-y-auto bg-[#ECE5DD] px-3 py-4 sm:h-[480px]">
               {messages.map((m) => {
                 const isCustomer = m.sender === "customer";
                 return (
@@ -370,7 +388,7 @@ export default function WhatsAppSimulator() {
                               </span>
                             </span>
                             <span className="block text-slate-600">Service: <span className="font-semibold text-ink-950">{m.booking.service}</span></span>
-                            <span className="block text-slate-600">Date &amp; time: <span className="font-semibold text-ink-950">{m.booking.dateTime}</span></span>
+                            <span className="block text-slate-600">{m.booking.label ?? "Date & time"}: <span className="font-semibold text-ink-950">{m.booking.dateTime}</span></span>
                             <span className="block text-slate-600">Amount: <span className="font-semibold text-ink-950">{m.booking.amount}</span></span>
                             <span className="block text-xs text-slate-400">Ref: {m.booking.ref}</span>
                           </span>
@@ -458,11 +476,13 @@ export default function WhatsAppSimulator() {
       {/* Calendar & n8n drawer */}
       {drawerOpen && (
         <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label="Calendar and n8n bookings">
-          <button type="button" aria-label="Close bookings panel" onClick={() => setDrawerOpen(false)} className="absolute inset-0 bg-ink-950/50" />
-          <aside className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
+          {/* Overlay is a plain div (not a button) on its own layer, so the
+              panel and its Close button always sit above it and stay clickable. */}
+          <div aria-hidden="true" onClick={() => setDrawerOpen(false)} className="absolute inset-0 z-0 bg-ink-950/50" />
+          <aside className="absolute right-0 top-0 z-10 flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
               <h2 className="font-display text-lg font-bold text-ink-950">⚡ Calendar &amp; n8n</h2>
-              <button type="button" onClick={() => setDrawerOpen(false)} aria-label="Close" className="rounded-full border border-slate-300 px-3 py-1 text-sm font-semibold hover:border-ink-950">
+              <button type="button" onClick={() => setDrawerOpen(false)} aria-label="Close" className="relative z-10 rounded-full border border-slate-300 px-3 py-1 text-sm font-semibold hover:border-ink-950">
                 Close
               </button>
             </div>
@@ -474,6 +494,15 @@ export default function WhatsAppSimulator() {
               ) : (
                 <>
                   <h3 className="mb-2 text-sm font-bold text-ink-950">Booked calendar events ({bookings.length})</h3>
+                  {/* Session-wide counter: bookings from ALL businesses count
+                      here, even after switching industries. */}
+                  <p className="mb-3 text-xs text-slate-500">
+                    {(() => {
+                      const counts: Record<string, number> = {};
+                      for (const b of bookings) counts[b.business] = (counts[b.business] ?? 0) + 1;
+                      return Object.keys(counts).map((name) => `${name}: ${counts[name]}`).join(" · ");
+                    })()}
+                  </p>
                   <ul className="space-y-2">
                     {bookings.map((b, i) => (
                       <li key={`${b.booking.ref}-${i}`} className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm">
@@ -487,7 +516,7 @@ export default function WhatsAppSimulator() {
                   {latestPayload && (
                     <>
                       <h3 className="mb-2 mt-5 text-sm font-bold text-ink-950">Live n8n webhook payload (latest booking)</h3>
-                      <pre className="overflow-x-auto rounded-xl bg-ink-950 p-4 text-xs leading-relaxed text-green-300">
+                      <pre className="max-h-80 overflow-auto whitespace-pre-wrap break-words rounded-xl bg-ink-950 p-4 text-xs leading-relaxed text-green-300">
                         {JSON.stringify(latestPayload, null, 2)}
                       </pre>
                       <p className="mt-2 text-xs text-slate-500">
@@ -505,8 +534,8 @@ export default function WhatsAppSimulator() {
       {/* 29-node n8n flow modal */}
       {flowOpen && (
         <div className="fixed inset-0 z-40 flex items-end justify-center sm:items-center" role="dialog" aria-modal="true" aria-label="29-node n8n flow">
-          <button type="button" aria-label="Close flow details" onClick={() => setFlowOpen(false)} className="absolute inset-0 bg-ink-950/50" />
-          <div className="relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white p-6 shadow-2xl sm:rounded-3xl">
+          <div aria-hidden="true" onClick={() => setFlowOpen(false)} className="absolute inset-0 z-0 bg-ink-950/50" />
+          <div className="relative z-10 max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white p-6 shadow-2xl sm:rounded-3xl">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h2 className="font-display text-xl font-bold text-ink-950">The 29-node n8n flow</h2>
@@ -514,7 +543,7 @@ export default function WhatsAppSimulator() {
                   Every stage of the receptionist, automated end to end. Simulated overview — the full flow ships with the template.
                 </p>
               </div>
-              <button type="button" onClick={() => setFlowOpen(false)} aria-label="Close" className="rounded-full border border-slate-300 px-3 py-1 text-sm font-semibold hover:border-ink-950">
+              <button type="button" onClick={() => setFlowOpen(false)} aria-label="Close" className="relative z-10 shrink-0 rounded-full border border-slate-300 px-3 py-1 text-sm font-semibold hover:border-ink-950">
                 Close
               </button>
             </div>

@@ -18,7 +18,7 @@ const CAPABILITIES: Record<string, string[]> = {
     "Books, confirms and reschedules appointments in the chat",
     "Checks real availability before offering a time slot",
     "Sends automatic reminders to reduce no-shows",
-    "Syncs confirmed bookings to your calendar",
+    "Adds confirmed bookings to your calendar once connected (Pro integration, set up after onboarding)",
   ],
   "Lead CRM": [
     "Every conversation becomes a lead with contact details",

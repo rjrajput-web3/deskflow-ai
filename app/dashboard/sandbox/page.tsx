@@ -9,13 +9,21 @@ export default function SandboxPage() {
   const [ws, setWs] = useState<Workspace | null>(null);
   const [input, setInput] = useState("");
   const [chat, setChat] = useState<ChatEntry[]>([
-    { from: "ai", text: "Hi! I'm the demo receptionist for Oakridge Dental Studio. Ask me a price, opening hours, or to book — e.g. “How much is whitening?”", source: "mock" },
+    { from: "ai", text: "Hi! I'm the demo receptionist. Ask me a price, opening hours, or to book — e.g. “How much is whitening?”", source: "mock" },
   ]);
   const [payload, setPayload] = useState<string>("");
   const [sending, setSending] = useState(false);
   const [lastSource, setLastSource] = useState<"live" | "mock" | null>(null);
 
   useEffect(() => setWs(getWorkspace()), []);
+  // Greet with the workspace's own business name once it loads.
+  useEffect(() => {
+    if (!ws) return;
+    setChat((c) => {
+      if (c.length !== 1 || c[0].from !== "ai") return c;
+      return [{ from: "ai", text: `Hi! I'm the demo receptionist for ${ws.businessName}. Ask me a price, opening hours, or to book — e.g. “How much is whitening?”`, source: "mock" }];
+    });
+  }, [ws]);
 
   if (!ws) return <p className="text-sm text-slate-500">Loading demo workspace…</p>;
 

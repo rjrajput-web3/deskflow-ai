@@ -51,15 +51,15 @@ const GUIDES: Guide[] = [
     icon: "📅",
     status: "Demo",
     statusTone: "demo",
-    intro: "Confirmed appointments appear on your calendar automatically, so the receptionist never double-books you.",
+    intro: "After onboarding, confirmed appointments appear on your Google Calendar automatically, so the receptionist never double-books you. In the demo, bookings are provisional and appear in the ⚡ Calendar & n8n drawer instead.",
     steps: [
-      "Open Integrations in your workspace and choose Google Calendar.",
+      "Open Dashboard → Integrations in your workspace and choose Google Calendar.",
       "Sign in with the Google account that holds your business calendar.",
       "Grant calendar access so DeskFlow AI can create and check events.",
       "Choose which calendar receives bookings and your working hours.",
-      "Send a test booking from the demo chat and confirm it appears on the calendar.",
+      "Send a test booking from the live demo chat and confirm it appears in the Calendar & n8n drawer (in the live service it lands on your calendar).",
     ],
-    note: "Requires your Google account — not connected in this demo.",
+    note: "Requires your Google account — not connected in this demo. Calendar sync is set up after onboarding, on the Pro plan.",
   },
   {
     id: "n8n-webhooks",
@@ -70,12 +70,12 @@ const GUIDES: Guide[] = [
     intro: "Forward bookings, leads and conversation events to your own n8n workflows — for example, to a spreadsheet, your CRM or a notification channel.",
     steps: [
       "Create a Webhook node in your n8n workflow and copy its production URL.",
-      "In DeskFlow AI, open Integrations → n8n webhooks and paste the URL.",
+      "In DeskFlow AI, open Dashboard → Integrations → n8n webhooks and paste the URL (in this demo it is saved in your browser only).",
       "Choose the events to forward: new lead, booking confirmed, booking cancelled, handoff requested.",
-      "Send a test event from the workspace and confirm it arrives in n8n.",
+      "Send a test booking from the live demo chat and check the ⚡ Calendar & n8n drawer — it shows the exact JSON payload that would be posted to your webhook.",
       "Map the fields in n8n to the next step in your workflow.",
     ],
-    note: "Requires your own n8n instance — not connected in this demo.",
+    note: "Requires your own n8n instance — not connected in this demo. No events are sent anywhere from this demo; the drawer payload is a simulation of what would be posted.",
   },
 ];
 
@@ -94,7 +94,7 @@ const DOC_FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Where do my bookings and leads go?",
-    a: "Bookings go to your connected Google Calendar, and leads are stored in the built-in Lead CRM in your workspace. Webhooks can forward both to your own tools.",
+    a: "In the live service, bookings go to your connected Google Calendar (set up after onboarding, Pro plan) and leads are stored in the built-in Lead CRM in your workspace. Webhooks can forward both to your own tools. In the demo, bookings appear in the Calendar & n8n drawer as provisional entries and leads live in the demo CRM.",
   },
 ];
 

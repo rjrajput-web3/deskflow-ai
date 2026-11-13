@@ -50,13 +50,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-200 bg-white/90 px-5 py-3 backdrop-blur sm:px-8">
+        <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur sm:px-8">
           <span className="badge-demo shrink-0">Demo workspace — demo data</span>
-          <div className="flex shrink-0 items-center gap-3">
-            <Link href="/dashboard" className="text-xs font-semibold text-slate-500 hover:text-ink-950">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <Link href="/dashboard" className="hidden text-xs font-semibold text-slate-500 hover:text-ink-950 sm:inline">
               Business Dashboard →
             </Link>
-            <Link href="/" className="btn-ghost !px-4 !py-2 text-xs">
+            <Link href="/" className="btn-ghost !px-3 !py-1.5 text-[11px] sm:!px-4 sm:!py-2 sm:text-xs">
               ← Marketing site
             </Link>
           </div>

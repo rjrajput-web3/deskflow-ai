@@ -24,9 +24,14 @@ export default function DashboardOverview() {
       messagesToday: last?.messages ?? 0,
       newLeads: ws.leads.filter((l) => l.status === "New").length,
       bookingsToday: ws.appointments.filter((a) => a.date === today).length,
+      // Single source of truth: these 14-day totals are the SAME numbers the
+      // Analytics page shows — every page reads from this one workspace.
       totalMessages14: ws.analytics.reduce((s, d) => s + d.messages, 0),
       totalLeads14: ws.analytics.reduce((s, d) => s + d.leads, 0),
       totalBookings14: ws.analytics.reduce((s, d) => s + d.bookings, 0),
+      leadsInCrm: ws.leads.length,
+      conversations: ws.conversations.length,
+      pipelineValue: ws.leads.filter((l) => l.status !== "Lost").reduce((s, l) => s + l.value, 0),
       todayAppts: ws.appointments.filter((a) => a.date === today),
     };
   }, [ws]);
@@ -39,9 +44,9 @@ export default function DashboardOverview() {
   const report = `Today at ${ws.businessName}: ${stats.messagesToday} customer messages, ${stats.newLeads} new leads waiting, and ${stats.bookingsToday} bookings on the calendar. Over the last 14 days the AI handled ${stats.totalMessages14} messages, captured ${stats.totalLeads14} leads and made ${stats.totalBookings14} bookings. Average first reply: about ${AVG_FIRST_REPLY_SECONDS} seconds. Escalated conversations needing staff: ${ws.conversations.filter((c) => c.escalated).length}.`;
 
   const cards = [
-    { label: "Messages today", value: String(stats.messagesToday), note: "AI replies, all channels" },
-    { label: "New leads", value: String(stats.newLeads), note: "Waiting for follow-up" },
-    { label: "Bookings today", value: String(stats.bookingsToday), note: "On the calendar" },
+    { label: "Messages — last 14 days", value: String(stats.totalMessages14), note: "Same total as Analytics" },
+    { label: "Leads — last 14 days", value: String(stats.totalLeads14), note: `${stats.leadsInCrm} leads in the CRM` },
+    { label: "Bookings — last 14 days", value: String(stats.totalBookings14), note: `${stats.bookingsToday} today` },
     { label: "Avg first reply", value: `~${AVG_FIRST_REPLY_SECONDS}s`, note: "Demo average" },
   ];
 
@@ -69,7 +74,9 @@ export default function DashboardOverview() {
       <div className="grid gap-6 lg:grid-cols-5">
         <div className="card card-pad lg:col-span-3">
           <h2 className="font-display text-lg font-bold text-ink-950">Messages per day — last 14 days</h2>
-          <p className="mt-1 text-xs text-slate-500">Demo analytics. CSV export arrives with the Supabase step.</p>
+          <p className="mt-1 text-xs text-slate-500">
+            Demo analytics — {stats.totalMessages14} messages · {stats.totalLeads14} leads · {stats.totalBookings14} bookings in 14 days. CRM: {stats.leadsInCrm} leads · {stats.conversations} conversations · ${stats.pipelineValue} pipeline.
+          </p>
           <div className="mt-6 flex h-40 items-end gap-1.5">
             {ws.analytics.map((d) => (
               <div key={d.date} className="flex flex-1 flex-col items-center gap-1.5" title={`${d.date}: ${d.messages} messages, ${d.leads} leads, ${d.bookings} bookings`}>

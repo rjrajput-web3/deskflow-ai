@@ -47,7 +47,12 @@ export default function AnalyticsPage() {
     ...s,
     bookings: ws.appointments.filter((a) => a.service === s.name).length,
   })).sort((a, b) => b.bookings - a.bookings);
-  const conversion = totals.leads > 0 ? Math.round((totals.bookings / totals.leads) * 100) : 0;
+  // Conversion is computed from the funnel itself: leads that reached "Booked"
+  // (Booked + Won) out of all leads that entered the funnel (New stage).
+  // Funnel: New 4 → Contacted 3 → Booked 2 → Won 1, so 2 of 4 = 50%.
+  const funnelNew = funnel[0]?.value ?? 0;
+  const funnelBooked = funnel[2]?.value ?? 0;
+  const conversion = funnelNew > 0 ? Math.round((funnelBooked / funnelNew) * 100) : 0;
 
   return (
     <div className="space-y-8">
@@ -89,7 +94,7 @@ export default function AnalyticsPage() {
             ))}
           </div>
           <p className="mt-4 text-sm text-slate-600">
-            Lead → booking conversion (14 days): <strong className="text-ink-950">{conversion}%</strong> (demo).
+            Lead → booking conversion (demo leads): <strong className="text-ink-950">{conversion}%</strong> — {funnelBooked} of {funnelNew} leads reached Booked.
           </p>
         </div>
       </div>
@@ -115,7 +120,7 @@ export default function AnalyticsPage() {
             ))}
           </ul>
           <p className="mt-5 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-500">
-            📥 CSV export arrives with the Supabase step — these charts are computed from the
+            📥 CSV export is not available in this demo — these charts are computed from the
             demo workspace in your browser.
           </p>
         </div>

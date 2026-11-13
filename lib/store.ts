@@ -18,7 +18,9 @@ import {
 
 export type { Workspace, Lead, LeadStatus, Appointment, Conversation, KnowledgeDoc, ChatMessage };
 
-const KEY = "deskflow-demo-workspace-v1";
+// v2: seed changed 2026-11-14 (canonical business names + hours, in-hours
+// appointments) — a new key so older saved seeds are replaced, not kept.
+const KEY = "deskflow-demo-workspace-v2";
 
 function clone<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;
@@ -35,7 +37,13 @@ export function getWorkspace(): Workspace {
     }
     const parsed = JSON.parse(raw) as Workspace;
     // Backfill any missing top-level keys so older seeds stay usable.
+    // If the saved seed is from an older version (different business name or
+    // hours), replace it with the current seed instead of mixing old + new.
     const seed = seedWorkspace();
+    if (parsed.businessName !== seed.businessName || parsed.hours !== seed.hours) {
+      window.localStorage.setItem(KEY, JSON.stringify(seed));
+      return seed;
+    }
     return { ...seed, ...parsed };
   } catch {
     return seedWorkspace();

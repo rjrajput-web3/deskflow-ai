@@ -5,7 +5,8 @@ export const SITE = {
   tagline: "Your Business Never Misses a Customer.",
   demoUrl: "https://deskflow-receptionist.vercel.app",
   gumroadTemplate: "https://smartstartguideshq.gumroad.com/l/deskflow-whatsapp-receptionist",
-  contactEmail: "hello@deskflowai.app",
+  // Public contact for waitlist + enquiries (mailto delivery — no backend yet).
+  contactEmail: "xyzcryp0@gmail.com",
 };
 
 export const NAV_LINKS = [
@@ -41,7 +42,7 @@ export const PLANS: Plan[] = [
   {
     name: "Pro", price: "$99", period: "/month",
     blurb: "For high-volume businesses with a team behind the AI.",
-    replies: "10,000 AI replies / month", channels: "WhatsApp + live chat + voice AI (add-on)",
+    replies: "10,000 AI replies / month", channels: "WhatsApp + live chat · voice AI (Roadmap)",
     features: ["Multi-staff human handoff + escalation", "Advanced conversion analytics", "Google Calendar + webhook integrations", "Daily owner performance report", "Priority support"],
     cta: "Join Waitlist",
   },
@@ -69,7 +70,7 @@ export const INDUSTRIES: Industry[] = [
     slug: "hotels", name: "Hotels", icon: "🏨",
     blurb: "Room enquiries, booking requests and check-in information — handled around the clock.",
     useCases: ["Quote room rates + availability", "Take booking requests with dates", "Share check-in / check-out times", "Answer amenity + policy questions"],
-    sampleServices: [{ name: "Deluxe room / night", price: "$189" }, { name: "Suite / night", price: "$329" }, { name: "Airport shuttle", price: "$25" }],
+    sampleServices: [{ name: "Deluxe room (per night)", price: "$189" }, { name: "Suite (per night)", price: "$329" }, { name: "Airport shuttle", price: "$25" }],
   },
   {
     slug: "restaurants", name: "Restaurants", icon: "🍽️",
@@ -87,13 +88,19 @@ export const INDUSTRIES: Industry[] = [
     slug: "real-estate", name: "Real Estate", icon: "🏡",
     blurb: "Property enquiries, lead capture and viewing requests — every lead answered in seconds.",
     useCases: ["Share listings + prices instantly", "Book property viewings", "Qualify buyers vs renters", "Hand hot leads to an agent"],
-    sampleServices: [{ name: "2-bed apartment / month", price: "$2,400" }, { name: "Viewing tour", price: "Free" }, { name: "Valuation call", price: "Free" }],
+    sampleServices: [{ name: "2-bed apartment (per month)", price: "$2,400" }, { name: "Viewing tour", price: "Free" }, { name: "Valuation call", price: "Free" }],
   },
   {
     slug: "auto", name: "Auto Services", icon: "🔧",
     blurb: "Service estimates and workshop bookings — customers get answers, you get the job.",
     useCases: ["Quote oil change, brakes, tyres", "Book workshop slots", "Share opening hours + location", "Follow up on estimates"],
     sampleServices: [{ name: "Full service + MOT check", price: "$149" }, { name: "Oil change", price: "$59" }, { name: "Brake pads replacement", price: "$189" }],
+  },
+  {
+    slug: "online-stores", name: "Online Stores", icon: "🛍️",
+    blurb: "Order questions, delivery updates and product enquiries — answered while you pack orders.",
+    useCases: ["Answer order status + tracking questions", "Share delivery times and shipping costs", "Handle returns and exchanges", "Recommend products and upsell at checkout"],
+    sampleServices: [{ name: "Standard delivery", price: "$4.99" }, { name: "Express delivery", price: "$9.99" }, { name: "Product enquiry", price: "Free" }],
   },
 ];
 

@@ -41,7 +41,7 @@ export default function KnowledgePage() {
   const onFile = async (file: File | undefined) => {
     if (!file) return;
     if (file.name.toLowerCase().endsWith(".pdf")) {
-      setNotice("PDF parsing needs the Supabase Storage step — text (.txt / .md) files work in this demo.");
+      setNotice("PDF parsing is not available in this demo yet — text (.txt / .md) files work here.");
       return;
     }
     const content = await file.text();
@@ -69,7 +69,7 @@ export default function KnowledgePage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="card card-pad">
           <h2 className="font-display text-lg font-bold text-ink-950">Paste a website URL</h2>
-          <p className="mt-1 text-sm text-slate-500">Saved as a reference. Full page fetching arrives with the Supabase step.</p>
+          <p className="mt-1 text-sm text-slate-500">Saved as a reference. Full page fetching is not available in this demo yet.</p>
           <input className="input mt-4" placeholder="https://yourbusiness.example.com/services" value={url} onChange={(e) => setUrl(e.target.value)} />
           <button type="button" className="btn-primary mt-3 w-full !py-2.5 text-sm" onClick={addUrl}>Save URL</button>
         </div>
@@ -84,7 +84,7 @@ export default function KnowledgePage() {
 
         <div className="card card-pad">
           <h2 className="font-display text-lg font-bold text-ink-950">Upload a file</h2>
-          <p className="mt-1 text-sm text-slate-500">.txt / .md files are read in your browser and stored locally. PDFs need the Supabase Storage step.</p>
+          <p className="mt-1 text-sm text-slate-500">.txt / .md files are read in your browser and stored locally. PDFs are not parsed in this demo yet.</p>
           <input
             ref={fileRef} type="file" accept=".txt,.md,.pdf" className="input mt-4"
             onChange={(e) => void onFile(e.target.files?.[0])}

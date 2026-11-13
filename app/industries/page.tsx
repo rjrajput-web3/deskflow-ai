@@ -16,10 +16,10 @@ export default function IndustriesPage() {
         </p>
       </section>
 
-      {/* Industry sections */}
+      {/* Industry sections — all 7 presets, plus Custom Business */}
       <section className="container-x grid gap-6 pb-8 md:grid-cols-2">
         {INDUSTRIES.map((industry) => (
-          <article key={industry.slug} id={industry.slug} className="card card-pad flex flex-col">
+          <article key={industry.slug} id={industry.slug} className="card card-pad flex scroll-mt-24 flex-col">
             <div className="flex items-start justify-between gap-4">
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-2xl">
                 {industry.icon}
@@ -59,20 +59,33 @@ export default function IndustriesPage() {
           </article>
         ))}
 
-        {/* Online stores — coming soon */}
-        <article className="card card-pad flex flex-col border-dashed bg-slate-50/60">
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-2xl">🛍️</span>
-          <h2 className="h-display mt-5 text-2xl">Online Stores</h2>
+        {/* Custom Business — any business, any services */}
+        <article id="custom" className="card card-pad flex scroll-mt-24 flex-col border-2 border-brand-600/40 bg-gradient-to-br from-brand-50/60 to-white">
+          <div className="flex items-start justify-between gap-4">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-100 text-2xl">✨</span>
+            <Link
+              href="/demo"
+              className="rounded-full bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-brand-700"
+            >
+              Try Custom Business in the demo →
+            </Link>
+          </div>
+          <h2 className="h-display mt-5 text-2xl">Custom Business</h2>
           <p className="mt-2 leading-relaxed text-slate-600">
-            Order questions, delivery updates and product enquiries for e-commerce stores.
+            Any business, any services — the receptionist learns from the information you
+            give it. No preset needed: add your own services, prices and hours.
           </p>
-          <span className="badge-demo mt-5 self-start">Coming soon</span>
-          <p className="mt-4 text-sm leading-relaxed text-slate-500">
-            The online stores preset is not available yet. We are building it after the six
-            presets above — join the waitlist and we will let you know when it launches.
-          </p>
+          <h3 className="mt-6 text-xs font-semibold uppercase tracking-widest text-slate-400">What it handles</h3>
+          <ul className="mt-3 space-y-2.5">
+            {["Answers from your own services, prices and hours", "Books appointments the way you define them", "Hands tricky chats to your team", "Works for any niche — if you serve customers, it fits"].map((useCase) => (
+              <li key={useCase} className="flex items-start gap-2.5 text-sm text-slate-700">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">✓</span>
+                {useCase}
+              </li>
+            ))}
+          </ul>
           <div className="mt-auto pt-6">
-            <Link href="/#waitlist" className="btn-ghost">Join Waitlist</Link>
+            <Link href="/demo" className="btn-accent">Try the Custom Business demo →</Link>
           </div>
         </article>
       </section>

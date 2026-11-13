@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PLANS, SITE } from "@/lib/site";
 
 const COMPARISON: { label: string; values: string[] }[] = [
-  { label: "WhatsApp channels", values: ["1 channel", "1 channel + live chat", "WhatsApp + live chat + voice AI (add-on)", "Multi-workspace"] },
+  { label: "WhatsApp channels", values: ["1 channel", "1 channel + live chat", "WhatsApp + live chat · voice AI (Roadmap)", "Multi-workspace"] },
   { label: "AI replies / month", values: ["500", "2,500", "10,000", "Custom limits"] },
   { label: "Appointment booking", values: ["—", "✓", "✓", "✓"] },
   { label: "Knowledge base training", values: ["Basic FAQ", "PDF / URL", "PDF / URL", "✓"] },
@@ -95,8 +95,10 @@ export default function PricingPage() {
       {/* Metered usage note */}
       <section className="container-x pb-6">
         <p className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-relaxed text-amber-900">
-          WhatsApp, AI and voice usage is metered separately or included within the limits above —
-          no plan includes unlimited usage. Exact limits and billing are confirmed at signup.
+          WhatsApp, AI and voice usage is metered within the reply limits above — no plan
+          includes unlimited usage, and there are no hidden fees beyond the plan price.
+          Voice AI is on the roadmap and not included in any plan yet. Exact limits and
+          billing are confirmed at signup.
         </p>
       </section>
 

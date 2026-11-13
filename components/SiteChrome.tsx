@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "./Logo";
+import PromoPopup from "./PromoPopup";
 import { INDUSTRIES, NAV_LINKS, SITE } from "@/lib/site";
 
 const PRODUCT_LINKS = [
@@ -100,9 +101,12 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
             <ul className="mt-4 space-y-2.5 text-sm">
               {INDUSTRIES.map((ind) => (
                 <li key={ind.slug}>
-                  <Link href="/industries" className="transition hover:text-white">{ind.name}</Link>
+                  <Link href={`/industries#${ind.slug}`} className="transition hover:text-white">{ind.name}</Link>
                 </li>
               ))}
+              <li>
+                <Link href="/industries#custom" className="transition hover:text-white">Custom Business</Link>
+              </li>
             </ul>
           </div>
           <div>
@@ -136,10 +140,15 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
         <div className="border-t border-white/10">
           <div className="container-x flex flex-col gap-2 py-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 DeskFlow AI. All rights reserved.</p>
-            <p>Demo data is clearly labelled where simulated.</p>
+            <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <span>Demo data is clearly labelled where simulated.</span>
+              <Link href="/terms" className="transition hover:text-white">Terms</Link>
+              <Link href="/privacy" className="transition hover:text-white">Privacy</Link>
+            </p>
           </div>
         </div>
       </footer>
+      <PromoPopup />
     </div>
   );
 }

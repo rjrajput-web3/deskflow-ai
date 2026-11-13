@@ -58,34 +58,34 @@ export default function BusinessSetupPage() {
           <span className="label">Services &amp; USD prices</span>
           <div className="space-y-2">
             {ws.services.map((s) => (
-              <div key={s.id} className="flex gap-2">
+              <div key={s.id} className="flex flex-col gap-2 sm:flex-row">
                 <input
-                  className="input" value={s.name} aria-label="Service name"
+                  className="input min-w-0 flex-1" value={s.name} aria-label="Service name"
                   onChange={(e) => setService(s.id, { name: e.target.value })}
                 />
-                <div className="flex w-32 shrink-0 items-center gap-1">
+                <div className="flex w-full items-center gap-1 sm:w-32 sm:shrink-0">
                   <span className="text-sm text-slate-500">$</span>
                   <input
-                    className="input" type="number" min={0} value={s.price} aria-label="Service price in USD"
+                    className="input min-w-0 flex-1" type="number" min={0} value={s.price} aria-label="Service price in USD"
                     onChange={(e) => setService(s.id, { price: Number(e.target.value) || 0 })}
                   />
                 </div>
                 <button
                   type="button" onClick={() => update({ services: ws.services.filter((x) => x.id !== s.id) })}
-                  className="shrink-0 rounded-xl border border-red-200 px-3 text-sm font-semibold text-red-600 hover:bg-red-50"
+                  className="shrink-0 self-start rounded-xl border border-red-200 px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 sm:self-auto"
                 >
                   Remove
                 </button>
               </div>
             ))}
           </div>
-          <div className="mt-3 flex gap-2">
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <input
-              className="input" placeholder="New service name" value={newSvcName}
+              className="input min-w-0 flex-1" placeholder="New service name" value={newSvcName}
               onChange={(e) => setNewSvcName(e.target.value)}
             />
             <input
-              className="input w-32 shrink-0" type="number" min={0} placeholder="$ price" value={newSvcPrice}
+              className="input w-full sm:w-32 sm:shrink-0" type="number" min={0} placeholder="$ price" value={newSvcPrice}
               onChange={(e) => setNewSvcPrice(e.target.value)}
             />
             <button
@@ -135,9 +135,9 @@ export default function BusinessSetupPage() {
               </li>
             ))}
           </ul>
-          <div className="mt-3 flex gap-2">
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <input
-              className="input" placeholder='e.g. "Escalate bookings over $500 to staff"' value={newRule}
+              className="input min-w-0 flex-1" placeholder='e.g. "Escalate bookings over $500 to staff"' value={newRule}
               onChange={(e) => setNewRule(e.target.value)}
             />
             <button

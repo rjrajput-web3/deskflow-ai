@@ -5,7 +5,7 @@ import { FEATURES, INDUSTRIES, ONBOARDING_STEPS, PLANS } from "@/lib/site";
 
 const METRICS = [
   { value: "24/7", label: "Coverage — nights, weekends, holidays" },
-  { value: "6", label: "Industry presets, ready to configure" },
+  { value: "7", label: "Industry presets, ready to configure" },
   { value: "7", label: "Steps from signup to live receptionist" },
   { value: "<10s", label: "First reply in the live demo" },
 ];
@@ -142,13 +142,19 @@ export default function Home() {
         </div>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {INDUSTRIES.map((ind) => (
-            <Link key={ind.slug} href="/industries" className="card card-pad block">
+            <Link key={ind.slug} href={`/industries#${ind.slug}`} className="card card-pad block">
               <span className="text-3xl" aria-hidden="true">{ind.icon}</span>
               <h3 className="font-display mt-4 text-lg font-bold text-ink-950">{ind.name}</h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">{ind.blurb}</p>
               <span className="mt-4 inline-block text-sm font-semibold text-brand-700">Learn more →</span>
             </Link>
           ))}
+          <Link href="/industries#custom" className="card card-pad block border-2 border-brand-600/40 bg-gradient-to-br from-brand-50/60 to-white">
+            <span className="text-3xl" aria-hidden="true">✨</span>
+            <h3 className="font-display mt-4 text-lg font-bold text-ink-950">Custom Business</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">Any business, any services — the receptionist learns from your own information. No preset needed.</p>
+            <span className="mt-4 inline-block text-sm font-semibold text-brand-700">Learn more →</span>
+          </Link>
         </div>
       </section>
 
@@ -193,7 +199,9 @@ export default function Home() {
           <span className="eyebrow">Join the Waitlist</span>
           <h2 className="h-display mt-4 text-3xl sm:text-4xl">Be first when your region opens.</h2>
           <p className="lead mt-3">
-            DeskFlow AI is rolling out region by region. Join the waitlist and we&rsquo;ll email you as soon as it&rsquo;s available for your business.
+            DeskFlow AI is rolling out region by region. Join the waitlist — your email
+            app will open with a pre-filled request; send it and we&rsquo;ll email you as
+            soon as it&rsquo;s available for your business.
           </p>
         </div>
         <div className="mx-auto mt-10 max-w-2xl">

@@ -20,8 +20,8 @@ const INTEGRATIONS: Integration[] = [
     name: "Google Calendar",
     icon: "📅",
     status: "Demo",
-    what: "Confirmed appointments land on your calendar automatically, with reminders attached — no double-booking, no manual entry.",
-    needs: "Your Google account connected in the workspace — your step.",
+    what: "Once connected after onboarding, confirmed appointments are added to your Google Calendar automatically, with reminders attached — no double-booking, no manual entry. In the demo, bookings are provisional and appear in the Calendar & n8n drawer, not on a real calendar.",
+    needs: "Your Google account connected in the workspace after onboarding (Pro plan) — your step.",
   },
   {
     name: "n8n webhooks",
@@ -109,8 +109,8 @@ export default function IntegrationsPage() {
         <div className="card card-pad bg-ink-950 text-center sm:p-12">
           <h2 className="h-display text-3xl text-white sm:text-4xl">See the integrations in the live demo.</h2>
           <p className="mx-auto mt-4 max-w-xl leading-relaxed text-slate-300">
-            Book an appointment, watch it land on the calendar, and see the lead appear in
-            the CRM — all from one conversation.
+            Book an appointment, watch it appear in the Calendar &amp; n8n drawer, and see
+            the lead appear in the CRM — all from one conversation.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link href="/demo" className="btn-accent">Try Live Demo →</Link>

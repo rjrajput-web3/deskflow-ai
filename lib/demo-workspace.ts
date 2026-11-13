@@ -129,18 +129,19 @@ export function seedWorkspace(): Workspace {
     return { date, label: shortLabel(date), messages, leads, bookings };
   });
   const today = daysAgo(0);
-  const tomorrow = daysAgo(-1);
+  const tuesday = daysAgo(-3);
   return {
-    businessName: "Oakridge Dental Studio",
+    businessName: "BrightSmile Dental Studio",
     tagline: "Gentle, modern dentistry — same-week appointments.",
     services: [
       { id: "svc-cleaning", name: "Teeth cleaning / scaling", price: 120 },
       { id: "svc-checkup", name: "Check-up + X-ray", price: 85 },
       { id: "svc-whitening", name: "Whitening session", price: 199 },
     ],
-    hours: "Mon–Sat, 10:00 AM – 8:00 PM (Sun closed)",
-    openTime: "10:00 AM",
-    closeTime: "8:00 PM",
+    // Canonical hours — one source of truth, used everywhere on the site.
+    hours: "Mon–Sat, 9:00 AM – 6:00 PM (Sun closed)",
+    openTime: "9:00 AM",
+    closeTime: "6:00 PM",
     daysOpen: "Mon–Sat",
     escalationRules: [
       "Escalate bookings over $500 to staff",
@@ -150,12 +151,12 @@ export function seedWorkspace(): Workspace {
     knowledgeDocs: [
       {
         id: "doc-faq", title: "FAQs — prices, hours & policies", kind: "text",
-        content: "Teeth cleaning is $120, check-up + X-ray is $85, whitening is $199. We are open Mon–Sat 10 AM–8 PM, closed Sundays. Same-week appointments are usually available. Please arrive 10 minutes early for your first visit. Cancellations are free up to 24 hours before the appointment.",
+        content: "Teeth cleaning is $120, check-up + X-ray is $85, whitening is $199. We are open Mon–Sat 9 AM–6 PM, closed Sundays. Same-week appointments are usually available. Please arrive 10 minutes early for your first visit. Cancellations are free up to 24 hours before the appointment.",
         createdAt: daysAgo(6),
       },
       {
-        id: "doc-services", title: "Service list — oakridgedental.example.com/services", kind: "url",
-        content: "Source: https://oakridgedental.example.com/services — Teeth cleaning / scaling $120 (45 min), Check-up + X-ray $85 (30 min), Whitening session $199 (60 min). All treatments by licensed dentists. Emergency slots held daily at 10 AM and 4 PM.",
+        id: "doc-services", title: "Service list — brightsmiledental.example.com/services", kind: "url",
+        content: "Source: https://brightsmiledental.example.com/services — Teeth cleaning / scaling $120 (45 min), Check-up + X-ray $85 (30 min), Whitening session $199 (60 min). All treatments by licensed dentists. Emergency slots held daily at 9 AM and 4 PM.",
         createdAt: daysAgo(5),
       },
       {
@@ -172,11 +173,13 @@ export function seedWorkspace(): Workspace {
       { id: "lead-5", name: "Nina Patel", email: "nina.patel@example.com", source: "Website chat", status: "Lost", value: 85, notes: "Chose a clinic closer to home.", createdAt: daysAgo(5) },
     ],
     appointments: [
+      // All inside opening hours (Mon–Sat 9 AM–6 PM, Sun closed). Today is
+      // Saturday, so nothing is seeded on Sunday.
       { id: "appt-1", customer: "Alex Morgan", service: "Teeth cleaning / scaling", date: today, time: "10:30 AM", amount: 120, status: "Confirmed" },
       { id: "appt-2", customer: "Priya Sharma", service: "Whitening session", date: today, time: "2:00 PM", amount: 199, status: "Confirmed" },
       { id: "appt-3", customer: "Jordan Lee", service: "Check-up + X-ray", date: today, time: "4:30 PM", amount: 85, status: "Pending" },
-      { id: "appt-4", customer: "Sam Carter", service: "Whitening session", date: tomorrow, time: "11:00 AM", amount: 199, status: "Confirmed" },
-      { id: "appt-5", customer: "Alex Morgan", service: "Check-up + X-ray", date: daysAgo(-3), time: "9:00 AM", amount: 85, status: "Confirmed" },
+      { id: "appt-4", customer: "Sam Carter", service: "Whitening session", date: today, time: "11:00 AM", amount: 199, status: "Confirmed" },
+      { id: "appt-5", customer: "Alex Morgan", service: "Check-up + X-ray", date: tuesday, time: "9:00 AM", amount: 85, status: "Confirmed" },
     ],
     conversations: [
       {
@@ -207,7 +210,7 @@ export function seedWorkspace(): Workspace {
         lastMessage: "This is urgent — I'm in a lot of pain.",
         messages: [
           { id: "m1", from: "customer", text: "Hi, do you have any appointments today?", time: "8:15 AM" },
-          { id: "m2", from: "ai", text: "Hi Jordan! We open at 10 AM. A check-up + X-ray is $85. What time works for you today?", time: "8:15 AM" },
+          { id: "m2", from: "ai", text: "Hi Jordan! We open at 9 AM. A check-up + X-ray is $85. What time works for you today?", time: "8:15 AM" },
           { id: "m3", from: "customer", text: "This is urgent — I'm in a lot of pain.", time: "8:20 AM" },
         ],
       },
@@ -229,13 +232,14 @@ export function seedWorkspace(): Workspace {
 }
 
 // Demo tenants for the Super Admin panel (fictional businesses, demo data).
+// Business names are the SAME canonical names as the live demo (/demo).
 export const DEMO_TENANTS: Tenant[] = [
-  { id: "ten-1", business: "Oakridge Dental Studio", owner: "demo-owner@example.com", plan: "Growth", repliesUsed: 1840, repliesLimit: 2500, status: "Active", createdAt: "2026-10-02" },
-  { id: "ten-2", business: "Bloom Salon & Spa", owner: "demo-owner@example.com", plan: "Starter", repliesUsed: 420, repliesLimit: 500, status: "Active", createdAt: "2026-10-18" },
-  { id: "ten-3", business: "Harbor View Hotel", owner: "demo-owner@example.com", plan: "Pro", repliesUsed: 6210, repliesLimit: 10000, status: "Active", createdAt: "2026-09-21" },
-  { id: "ten-4", business: "CityFix Auto Services", owner: "demo-owner@example.com", plan: "Starter", repliesUsed: 96, repliesLimit: 500, status: "Trial", createdAt: "2026-11-10" },
-  { id: "ten-5", business: "Sunset Realty Group", owner: "demo-owner@example.com", plan: "Growth", repliesUsed: 2310, repliesLimit: 2500, status: "Active", createdAt: "2026-10-27" },
-  { id: "ten-6", business: "Pasta House Kitchen", owner: "demo-owner@example.com", plan: "Starter", repliesUsed: 0, repliesLimit: 500, status: "Suspended", createdAt: "2026-11-01" },
+  { id: "ten-1", business: "BrightSmile Dental Studio", owner: "demo-owner@example.com", plan: "Growth", repliesUsed: 1840, repliesLimit: 2500, status: "Active", createdAt: "2026-10-02" },
+  { id: "ten-2", business: "Glow Studio Salon", owner: "demo-owner@example.com", plan: "Starter", repliesUsed: 420, repliesLimit: 500, status: "Active", createdAt: "2026-10-18" },
+  { id: "ten-3", business: "The Harborview Hotel", owner: "demo-owner@example.com", plan: "Pro", repliesUsed: 6210, repliesLimit: 10000, status: "Active", createdAt: "2026-09-21" },
+  { id: "ten-4", business: "Apex Auto Care", owner: "demo-owner@example.com", plan: "Starter", repliesUsed: 96, repliesLimit: 500, status: "Trial", createdAt: "2026-11-10" },
+  { id: "ten-5", business: "Skyline Property Group", owner: "demo-owner@example.com", plan: "Growth", repliesUsed: 2310, repliesLimit: 2500, status: "Active", createdAt: "2026-10-27" },
+  { id: "ten-6", business: "Olive & Oak Bistro", owner: "demo-owner@example.com", plan: "Starter", repliesUsed: 0, repliesLimit: 500, status: "Suspended", createdAt: "2026-11-01" },
 ];
 
 export const SYSTEM_LOGS: SystemLog[] = [

@@ -59,7 +59,7 @@ export default function HowItWorksPage() {
             <div>
               <p className="font-display text-lg font-bold text-ink-950">2 · Leads and bookings land</p>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                Conversations become leads in your CRM and confirmed bookings appear in your calendar.
+                Conversations become leads in your CRM and confirmed bookings appear in your calendar once connected.
               </p>
             </div>
             <div>

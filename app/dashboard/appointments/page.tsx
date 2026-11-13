@@ -17,6 +17,7 @@ export default function AppointmentsPage() {
   const [date, setDate] = useState(localISO(new Date()));
   const [time, setTime] = useState("10:00 AM");
   const [amount, setAmount] = useState("");
+  const [formError, setFormError] = useState("");
 
   useEffect(() => setWs(getWorkspace()), []);
   if (!ws) return <p className="text-sm text-slate-500">Loading demo workspace…</p>;
@@ -28,8 +29,31 @@ export default function AppointmentsPage() {
     return localISO(d);
   });
 
+  // Opening hours: Mon–Sat 9:00 AM – 6:00 PM, Sun closed.
+  function hoursError(dateISO: string, timeStr: string): string {
+    const d = new Date(dateISO + "T12:00:00");
+    if (d.getDay() === 0) return "We are closed on Sundays — pick another day (Mon–Sat).";
+    const m = timeStr.trim().match(/^(\d{1,2})(?::(\d{2}))?\s*([AaPp])[Mm]?$/);
+    if (!m) return "Time should look like “10:00 AM”.";
+    let h = parseInt(m[1], 10);
+    const mins = parseInt(m[2] ?? "0", 10);
+    if (/^[Pp]/.test(m[3]) && h !== 12) h += 12;
+    if (/^[Aa]/.test(m[3]) && h === 12) h = 0;
+    const total = h * 60 + mins;
+    if (total < 9 * 60 || total >= 18 * 60) {
+      return "Outside opening hours — pick a time between 9:00 AM and 6:00 PM.";
+    }
+    return "";
+  }
+
   const submit = () => {
     if (!customer.trim() || !service) return;
+    const err = hoursError(date, time.trim() || "10:00 AM");
+    if (err) {
+      setFormError(err);
+      return;
+    }
+    setFormError("");
     const svc = ws.services.find((s) => s.name === service);
     const next = addAppointment({
       id: newId("appt"), customer: customer.trim(), service,
@@ -52,7 +76,9 @@ export default function AppointmentsPage() {
 
       <div className="card card-pad">
         <h2 className="font-display text-lg font-bold text-ink-950">This week</h2>
-        <div className="mt-4 grid grid-cols-7 gap-2">
+        <p className="mt-1 text-xs text-slate-500">Opening hours: Mon–Sat 9:00 AM – 6:00 PM, Sun closed.</p>
+        {/* Stacks vertically on phones (no clipped day columns), 7-across on desktop. */}
+        <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-7">
           {week.map((day) => {
             const dayAppts = ws.appointments.filter((a) => a.date === day);
             const label = new Date(day + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", day: "numeric" });
@@ -62,8 +88,8 @@ export default function AppointmentsPage() {
                 <p className="text-xs font-bold text-ink-950">{label}{isToday ? " • Today" : ""}</p>
                 <div className="mt-2 space-y-1.5">
                   {dayAppts.map((a) => (
-                    <div key={a.id} className="rounded-lg bg-ink-950 px-2 py-1 text-[10px] leading-tight text-white">
-                      {a.time} — {a.customer} ({a.service.split(" ")[0]})
+                    <div key={a.id} className="rounded-lg bg-ink-950 px-2 py-1 text-[10px] leading-snug text-white">
+                      {a.time} — {a.customer} · {a.service}
                     </div>
                   ))}
                   {dayAppts.length === 0 && <p className="text-[10px] text-slate-400">—</p>}
@@ -102,12 +128,15 @@ export default function AppointmentsPage() {
               {ws.services.map((s) => <option key={s.id} value={s.name}>{s.name} — ${s.price}</option>)}
             </select>
             <div className="flex gap-2">
-              <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-              <input className="input w-32 shrink-0" placeholder="10:00 AM" value={time} onChange={(e) => setTime(e.target.value)} />
+              <input className="input min-w-0 flex-1" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <input className="input w-32 min-w-0 shrink-0" placeholder="10:00 AM" value={time} onChange={(e) => setTime(e.target.value)} />
             </div>
             <input className="input" type="number" min={0} placeholder="Amount $ (auto-filled from service)" value={amount} onChange={(e) => setAmount(e.target.value)} />
+            {formError && (
+              <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{formError}</p>
+            )}
             <button type="button" className="btn-primary w-full !py-2.5 text-sm" onClick={submit}>+ Add appointment</button>
-            <p className="text-xs text-slate-400">Calendar sync (Google Calendar) arrives with the integrations step.</p>
+            <p className="text-xs text-slate-400">Hours: Mon–Sat 9:00 AM – 6:00 PM, Sun closed. Calendar sync (Google Calendar) is set up after onboarding.</p>
           </div>
         </div>
       </div>

@@ -4,6 +4,8 @@
 
 :root { --font-display: "Space Grotesk", sans-serif; --font-body: "Inter", sans-serif; }
 html { scroll-behavior: smooth; }
+/* Never let any page scroll sideways on small screens — clip, don't scroll. */
+html, body { overflow-x: clip; }
 body { @apply bg-white text-ink-950 font-sans antialiased; }
 ::selection { background: #10B981; color: #fff; }
 
@@ -23,7 +25,23 @@ body { @apply bg-white text-ink-950 font-sans antialiased; }
 .badge-live { @apply inline-flex items-center gap-1.5 rounded-full bg-brand-100 px-2.5 py-0.5 text-xs font-semibold text-brand-700; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-.anim-fade-up { animation: fadeUp .7s cubic-bezier(.22,1,.36,1) both; }
+/* Reveal is `backwards`, not `both`: if the animation never runs (background
+   tab, reduced motion, JS/paint hiccup) the element keeps its natural
+   opacity 1 — content is visible by default, animation only enhances. */
+.anim-fade-up { animation: fadeUp .7s cubic-bezier(.22,1,.36,1) backwards; }
 .anim-floaty { animation: floaty 5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up, .anim-floaty, .anim-shake { animation: none !important; }
+  html { scroll-behavior: auto; }
+}
+/* Gentle attention shake for the 50% OFF popup: a small wiggle in the first
+   8% of a 4s cycle, still the rest of the time. Subtle, never flashing. */
+@keyframes gentleShake {
+  0%, 8%, 100% { transform: rotate(0deg) translateX(0); }
+  2% { transform: rotate(-2.5deg) translateX(-2px); }
+  4% { transform: rotate(2.5deg) translateX(2px); }
+  6% { transform: rotate(-1.5deg) translateX(-1px); }
+}
+.anim-shake { animation: gentleShake 4s ease-in-out infinite; transform-origin: center; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }

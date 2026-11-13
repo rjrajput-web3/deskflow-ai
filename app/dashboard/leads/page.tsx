@@ -96,12 +96,12 @@ export default function LeadsPage() {
               <input className="input" placeholder="Name (fictional demo only)" value={name} onChange={(e) => setName(e.target.value)} />
               <input className="input" placeholder="Email (demo)" value={email} onChange={(e) => setEmail(e.target.value)} />
               <div className="flex gap-2">
-                <select className="input" value={source} onChange={(e) => setSource(e.target.value)}>
+                <select className="input min-w-0 flex-1" value={source} onChange={(e) => setSource(e.target.value)}>
                   <option>WhatsApp</option>
                   <option>Website chat</option>
                   <option>Referral</option>
                 </select>
-                <input className="input w-28 shrink-0" type="number" min={0} placeholder="$ value" value={value} onChange={(e) => setValue(e.target.value)} />
+                <input className="input w-28 min-w-0 shrink-0" type="number" min={0} placeholder="$ value" value={value} onChange={(e) => setValue(e.target.value)} />
               </div>
               <button type="button" className="btn-primary w-full !py-2.5 text-sm" onClick={submitLead}>+ Add lead</button>
             </div>

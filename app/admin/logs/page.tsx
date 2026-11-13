@@ -14,7 +14,7 @@ export default function LogsPage() {
         <h1 className="h-display mt-3 text-3xl">System Logs</h1>
         <p className="lead mt-2 text-base">
           Webhook receipts, bookings, AI replies and escalations across demo workspaces.
-          Live log streaming arrives with the Supabase step.
+          Live log streaming is not available in this demo — these are sample log entries.
         </p>
       </div>
 

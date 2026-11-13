@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { INDUSTRIES } from "@/lib/site";
+import { INDUSTRIES, SITE } from "@/lib/site";
 
 const STORAGE_KEY = "deskflow-waitlist";
 
@@ -19,6 +19,9 @@ export default function WaitlistForm() {
       setError("Please fill in your email, business name and industry.");
       return;
     }
+    // No backend yet: keep a local record AND open the visitor's email app
+    // with a pre-filled request addressed to us — that is how the request
+    // actually reaches us. Never claim it was "sent" when it only sits here.
     try {
       const entry = { email: email.trim(), businessName: businessName.trim(), industry, joinedAt: new Date().toISOString() };
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -26,8 +29,21 @@ export default function WaitlistForm() {
       list.push(entry);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
     } catch {
-      // Local storage unavailable (e.g. private mode) — still show success.
+      // Local storage unavailable (e.g. private mode) — mailto still works.
     }
+    const subject = "DeskFlow AI Waitlist";
+    const body = [
+      "Hi DeskFlow AI team,",
+      "",
+      "Please add me to the waitlist.",
+      "",
+      `Name / business: ${businessName.trim()}`,
+      `Work email: ${email.trim()}`,
+      `Industry: ${industry}`,
+      "",
+      "Thanks!",
+    ].join("\n");
+    window.location.href = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setDone(true);
   }
 
@@ -37,8 +53,16 @@ export default function WaitlistForm() {
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 text-xl text-brand-700" aria-hidden="true">
           ✓
         </div>
-        <p className="font-display text-xl font-bold text-ink-950">You&rsquo;re on the waitlist.</p>
-        <p className="mt-2 text-slate-600">You&rsquo;re on the waitlist — we&rsquo;ll email you when your region opens.</p>
+        <p className="font-display text-xl font-bold text-ink-950">Your email app should now be open.</p>
+        <p className="mt-2 text-slate-600">
+          Press <strong className="text-ink-950">Send</strong> in your email app to deliver your
+          waitlist request to {SITE.contactEmail} — that is what actually puts you on the
+          list. We also saved your details in this browser as a backup.
+        </p>
+        <p className="mt-3 text-sm text-slate-500">
+          If no email app opened, email {SITE.contactEmail} directly with your name,
+          business and industry.
+        </p>
       </div>
     );
   }
@@ -96,7 +120,8 @@ export default function WaitlistForm() {
         Join the Waitlist
       </button>
       <p className="mt-3 text-xs text-slate-500">
-        We&rsquo;ll only email you about DeskFlow AI availability. No spam.
+        Your email app will open with a pre-filled request addressed to {SITE.contactEmail} —
+        send it to join. We don&rsquo;t store your email on a server yet.
       </p>
     </form>
   );

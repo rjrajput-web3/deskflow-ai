@@ -16,8 +16,8 @@ export default function DemoPage() {
         <h1 className="h-display mt-4 text-4xl sm:text-5xl">Try the live demo</h1>
         <p className="lead mt-4">
           Pick an industry, send a message, and watch the AI receptionist quote real
-          prices in USD, confirm a booking, and sync it to Calendar and n8n — all in
-          seconds, exactly as your customers would experience it.
+          prices in USD, confirm a booking, and show it in the Calendar &amp; n8n drawer
+          — all in seconds, exactly as your customers would experience it.
         </p>
         <p className="mt-4">
           <span className="badge-demo">Demo — simulated replies</span>

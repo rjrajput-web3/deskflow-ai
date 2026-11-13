@@ -11,7 +11,21 @@ export type BookingDetails = {
   dateTime: string;
   amount: string;
   ref: string;
+  /** Label shown on the booking card: "Date & time" (default) or "Stay" for hotels. */
+  label?: string;
 };
+
+/** "Sat 15 Nov" style label for a date N days from today. */
+export function dayLabel(daysAhead: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + daysAhead);
+  return d.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short" });
+}
+
+/** Hotel stays are dates + nights, never a clock time. Check-in tomorrow, 2 nights. */
+export function hotelStay(): { dateTime: string; label: string } {
+  return { dateTime: `${dayLabel(1)} → ${dayLabel(3)} · 2 nights`, label: "Stay" };
+}
 
 export type ChatMessage = {
   id: string;
@@ -241,6 +255,37 @@ export const DEMO_BUSINESSES: DemoBusiness[] = [
     ],
   },
   {
+    slug: "online-stores",
+    name: "Everline Store",
+    industry: "Online Stores",
+    icon: "🛍️",
+    tagline: "Everyday essentials, shipped fast — tracked at every step.",
+    hours: "Online 24/7 — orders ship Mon–Sat",
+    quickReplies: [
+      "Where is my order?",
+      "How much is express delivery?",
+      "Do you take returns?",
+      "Talk to a human",
+    ],
+    services: servicesFor("online-stores"),
+    seed: [
+      msg("online-stores-1", "customer", "Hi! Where is my order #EV-1042?", "13:15"),
+      msg(
+        "online-stores-2",
+        "business",
+        "Hi there! Order #EV-1042 is out for delivery and should arrive today by 6:00 PM. Standard delivery is $4.99 and express is $9.99. Anything else I can help with?",
+        "13:15",
+      ),
+      msg("online-stores-3", "customer", "Can I return something if it doesn't fit?", "13:16"),
+      msg(
+        "online-stores-4",
+        "business",
+        "Of course — returns are free within 30 days, no questions asked. I can start a return for you any time, just share the order number.",
+        "13:16",
+      ),
+    ],
+  },
+  {
     slug: "custom",
     name: "Your Business",
     industry: "Custom Business",
@@ -314,6 +359,14 @@ export function generateReply(
 
   if (/book|appointment|reserve|schedule|slot|viewing|table|room for|book my|book a|book an/.test(lower)) {
     const service = matchedService ?? business.services[0];
+    // Hotels book stays (dates + nights), never a clock time.
+    if (business.slug === "hotels") {
+      const stay = hotelStay();
+      return {
+        text: `Done — I have held the ${service.name} for ${stay.dateTime}. Check-in is from 3:00 PM. You will get a confirmation and a reminder before your stay.`,
+        booking: { service: service.name, dateTime: stay.dateTime, amount: service.price, ref, label: stay.label },
+      };
+    }
     const dateTime =
       business.slug === "restaurants" ? "Tonight, 7:00 PM" : "Tomorrow, 10:00 AM";
     return {
@@ -413,5 +466,35 @@ export const FLOW_STAGES: FlowStage[] = [
 ];
 
 export const VOICE_NOTE_TEXT = "Can I reschedule to 3:00 PM?";
-export const VOICE_NOTE_REPLY =
-  "Done — I have moved your booking to tomorrow at 3:00 PM. You will get a reminder one hour before.";
+
+/**
+ * Voice-note reschedule — business-aware, and the reply and the booking card
+ * always agree on the same time. Hotels move the stay (check-in 3:00 PM, 2
+ * nights); everyone else moves the booking to tomorrow at 3:00 PM.
+ */
+export function voiceNoteResponse(business: DemoBusiness): { text: string; booking: BookingDetails } {
+  const ref = `DF-${String(Math.floor(100000 + Math.random() * 900000))}`;
+  if (business.slug === "hotels") {
+    const stay = hotelStay();
+    return {
+      text: `Done — I have moved your stay to check-in tomorrow at 3:00 PM, ${stay.dateTime}. You will get a reminder the day before.`,
+      booking: {
+        service: business.services[0]?.name ?? "Deluxe room (per night)",
+        dateTime: stay.dateTime,
+        amount: business.services[0]?.price ?? "$189",
+        ref,
+        label: stay.label,
+      },
+    };
+  }
+  const service = business.services[0];
+  return {
+    text: `Done — I have moved your booking to tomorrow at 3:00 PM. You will get a reminder one hour before.`,
+    booking: {
+      service: service?.name ?? "Appointment",
+      dateTime: "Tomorrow, 3:00 PM",
+      amount: service?.price ?? "",
+      ref,
+    },
+  };
+}
