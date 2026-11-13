@@ -475,7 +475,7 @@ export default function WhatsAppSimulator() {
 
       {/* Calendar & n8n drawer */}
       {drawerOpen && (
-        <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label="Calendar and n8n bookings">
+        <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="Calendar and n8n bookings">
           {/* Overlay is a plain div (not a button) on its own layer, so the
               panel and its Close button always sit above it and stay clickable. */}
           <div aria-hidden="true" onClick={() => setDrawerOpen(false)} className="absolute inset-0 z-0 bg-ink-950/50" />
@@ -533,7 +533,7 @@ export default function WhatsAppSimulator() {
 
       {/* 29-node n8n flow modal */}
       {flowOpen && (
-        <div className="fixed inset-0 z-40 flex items-end justify-center sm:items-center" role="dialog" aria-modal="true" aria-label="29-node n8n flow">
+        <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center" role="dialog" aria-modal="true" aria-label="29-node n8n flow">
           <div aria-hidden="true" onClick={() => setFlowOpen(false)} className="absolute inset-0 z-0 bg-ink-950/50" />
           <div className="relative z-10 max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white p-6 shadow-2xl sm:rounded-3xl">
             <div className="flex items-start justify-between gap-3">
