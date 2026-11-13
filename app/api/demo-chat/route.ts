@@ -387,7 +387,31 @@ function deterministic(
     if (svc) {
       return { text: `${greet}${svc[1]} ${priceVerb(svc[1])} ${svc[2]}. Would you like to book a slot? Just tell me the day and time.` };
     }
-    return { text: `${greet}Sure — which service is this for? We offer ${biz.services.slice(0, 6).map((s) => `${s[1]} ${s[2]}`).join(", ")}.` };
+    // Bare "book an appointment" (the simulator's quick reply): book the
+    // first service for tomorrow at 11:00 AM instead of asking which
+    // service — the demo must end in a booking card. (Deviation from the
+    // full demo's engine, which asks; kept here so the quick reply works
+    // end to end.) 11:00 AM is inside every business's open hours.
+    const def = biz.services[0];
+    const bk: BookingOut = { service: serviceLabel(biz, def), dayLabel: "Tomorrow", dayOffset: 1, time: "11:00 AM", amount: def[2] };
+    if (biz.id === "realestate") {
+      bk.amountLabel = "Free tour";
+      bk.extraRow = ["Property price", def[2]];
+      return {
+        text: `${greet}Done — I've provisionally booked a tour for a ${def[1]} for Tomorrow at 11:00 AM. The tour is free — the property rents at ${def[2]}. Our agent will confirm shortly and share the location pin.${nameAsk(customerName)}`,
+        booking: bk,
+      };
+    }
+    if (biz.id === "ecommerce") {
+      return {
+        text: `${greet}Done — I've scheduled a delivery slot for ${def[1]} (${def[2]}) for Tomorrow at 11:00 AM. Delivery is free, and returns are free within 7 days.${nameAsk(customerName)}`,
+        booking: bk,
+      };
+    }
+    return {
+      text: `${greet}Done — I've provisionally booked ${def[1]} for Tomorrow at 11:00 AM (${def[2]}). Our team will confirm shortly. Please arrive 10 minutes early.${nameAsk(customerName)}`,
+      booking: bk,
+    };
   }
 
   if (/(talk to| speak to| speak with| connect me| transfer me| real (person|human|agent)|human\b| real support)/.test(t)) {
