@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="DeskFlow AI">
+  <defs>
+    <linearGradient id="df-g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#10B981"/>
+      <stop offset="1" stop-color="#0D9488"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#df-g)"/>
+  <path d="M32 14c-9.9 0-18 7.2-18 16 0 4.9 2.6 9.3 6.8 12.2L19 50l8.5-4.2c1.5.3 3 .4 4.5.4 9.9 0 18-7.2 18-16S41.9 14 32 14z" fill="#FFFFFF"/>
+  <path d="M35.5 21.5l-7.5 9.5h5l-2.5 8.5 8.5-10.5h-5.2l3.2-7.5z" fill="#059669"/>
+</svg>
