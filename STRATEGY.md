@@ -150,10 +150,9 @@ vars are configured — no auth gates, no login wall.
 - Demo responder: hotel bookings use stay dates/nights (no clock time);
   service names render cleanly ("Deluxe room (per night)"); voice-note
   reschedule creates a matching booking card + counts in the ⚡ drawer.
-- One canonical name per business everywhere (BrightSmile Dental Studio,
-  The Harborview Hotel, Olive & Oak Bistro, Glow Studio Salon, Skyline
-  Property Group, Apex Auto Care, Everline Store, Custom Business);
-  dental hours Mon–Sat 9 AM–6 PM, Sun closed, everywhere.
+- One canonical name per business everywhere (Oakridge Dental Studio,
+  Harborview Realty, Velour Salon & Spa, Kinetix Gear, Custom Business);
+  dental hours Mon–Sat 10 AM–8 PM, Sun closed, everywhere.
 - One seeded dataset: Overview 14-day totals = Analytics (396 / 46 / 31);
   CRM 5 leads / $603 pipeline / 4 conversations; funnel conversion from the
   funnel itself (2 of 4 = 50%). All seeded appointments inside opening hours

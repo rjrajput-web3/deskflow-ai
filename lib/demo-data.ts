@@ -1,7 +1,16 @@
 // DeskFlow AI — live demo data: fictional demo businesses, seed threads,
 // keyword reply engine and the simulated n8n payload builder.
 // Everything here is simulated demo content. All prices are in USD only.
-import { INDUSTRIES } from "./site";
+//
+// NAMING (2026-11-14, user order): the simulator uses exactly the business
+// set the user named for the WhatsApp demo — Oakridge Dental Studio,
+// Harborview Realty, Velour Salon & Spa, Kinetix Gear + Custom Business —
+// so visitors see the same businesses here and on the full WhatsApp demo
+// (deskflow-receptionist.vercel.app). The old BrightSmile / Harborview
+// Hotel / Olive & Oak / Glow / Skyline / Apex / Everline set is retired;
+// verticals that no longer exist in the simulator (hotels, restaurants,
+// auto) live on only as marketing descriptions on /industries, with demo
+// links pointing at /demo (default) instead.
 
 export type MessageSender = "customer" | "business";
 export type MessageKind = "text" | "booking" | "voice";
@@ -11,21 +20,9 @@ export type BookingDetails = {
   dateTime: string;
   amount: string;
   ref: string;
-  /** Label shown on the booking card: "Date & time" (default) or "Stay" for hotels. */
+  /** Label shown on the booking card: "Date & time" (default), "Tour" or "Delivery slot". */
   label?: string;
 };
-
-/** "Sat 15 Nov" style label for a date N days from today. */
-export function dayLabel(daysAhead: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() + daysAhead);
-  return d.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short" });
-}
-
-/** Hotel stays are dates + nights, never a clock time. Check-in tomorrow, 2 nights. */
-export function hotelStay(): { dateTime: string; label: string } {
-  return { dateTime: `${dayLabel(1)} → ${dayLabel(3)} · 2 nights`, label: "Stay" };
-}
 
 export type ChatMessage = {
   id: string;
@@ -52,11 +49,6 @@ export type DemoBusiness = {
   seed: ChatMessage[];
 };
 
-function servicesFor(industrySlug: string): DemoService[] {
-  const found = INDUSTRIES.find((i) => i.slug === industrySlug);
-  return found ? found.sampleServices : [];
-}
-
 function msg(
   id: string,
   sender: MessageSender,
@@ -70,24 +62,33 @@ function msg(
 export const DEMO_BUSINESSES: DemoBusiness[] = [
   {
     slug: "dental",
-    name: "BrightSmile Dental Studio",
+    name: "Oakridge Dental Studio",
     industry: "Dental Clinics",
     icon: "🦷",
     tagline: "Gentle, modern dentistry — same-week appointments.",
-    hours: "Mon–Sat, 9:00 AM – 6:00 PM",
+    hours: "Mon–Sat, 10:00 AM – 8:00 PM (Sun closed)",
     quickReplies: [
       "How much is a cleaning?",
       "Book an appointment",
       "What are your hours?",
       "Talk to a human",
     ],
-    services: servicesFor("dental"),
+    services: [
+      { name: "Teeth cleaning / scaling", price: "$120" },
+      { name: "Consultation", price: "$40" },
+      { name: "Tooth filling", price: "$150 – $310" },
+      { name: "Root canal treatment", price: "$650 – $950" },
+      { name: "Tooth extraction", price: "$100 – $250" },
+      { name: "Teeth whitening", price: "$199" },
+      { name: "Braces consultation", price: "$75" },
+      { name: "Kids dental checkup", price: "$40" },
+    ],
     seed: [
       msg("dental-1", "customer", "Hi! How much is a teeth cleaning?", "09:12"),
       msg(
         "dental-2",
         "business",
-        "Hi there! A teeth cleaning / scaling is $120, and a check-up + X-ray is $85. Would you like me to book you in?",
+        "Hi there! A teeth cleaning / scaling is $120, and a consultation is $40. Would you like me to book you in?",
         "09:12",
       ),
       msg("dental-3", "customer", "Yes please — tomorrow morning if you have anything.", "09:13"),
@@ -100,87 +101,71 @@ export const DEMO_BUSINESSES: DemoBusiness[] = [
     ],
   },
   {
-    slug: "hotels",
-    name: "The Harborview Hotel",
-    industry: "Hotels",
-    icon: "🏨",
-    tagline: "Waterfront stays with free breakfast and late check-out.",
-    hours: "Front desk 24/7 — check-in from 3:00 PM, check-out by 11:00 AM",
+    slug: "real-estate",
+    name: "Harborview Realty",
+    industry: "Real Estate",
+    icon: "🏡",
+    tagline: "Rentals and sales across the city — viewings daily.",
+    hours: "Open every day, 10:00 AM – 7:00 PM",
     quickReplies: [
-      "How much is a deluxe room?",
-      "Book a room for this weekend",
-      "What time is check-in?",
+      "How much is the 2-bed apartment?",
+      "Book a tour",
+      "Do you offer home loans?",
       "Talk to a human",
     ],
-    services: servicesFor("hotels"),
-    seed: [
-      msg("hotels-1", "customer", "Hi, do you have a deluxe room free this weekend?", "10:02"),
-      msg(
-        "hotels-2",
-        "business",
-        "Hello! Yes — our deluxe room is $189 per night, and the suite is $329 per night. Both include breakfast. Shall I hold a deluxe room for you?",
-        "10:02",
-      ),
-      msg("hotels-3", "customer", "What time is check-in?", "10:04"),
-      msg(
-        "hotels-4",
-        "business",
-        "Check-in is from 3:00 PM and check-out is by 11:00 AM. Our airport shuttle is $25 each way if you need one.",
-        "10:04",
-      ),
+    services: [
+      { name: "2-bed luxury apartment", price: "$2,400/mo" },
+      { name: "3-bed luxury apartment", price: "$3,800/mo" },
+      { name: "Luxury villa", price: "$12,000/mo" },
+      { name: "Residential lot", price: "$450,000" },
+      { name: "1-bed apartment", price: "$1,850/mo" },
+      { name: "Rental homes", price: "$2,200/mo onwards" },
     ],
-  },
-  {
-    slug: "restaurants",
-    name: "Olive & Oak Bistro",
-    industry: "Restaurants",
-    icon: "🍽️",
-    tagline: "Seasonal plates, local wines, and a sunny terrace.",
-    hours: "Tue–Sun, 12:00 PM – 10:30 PM",
-    quickReplies: [
-      "Book a table for tonight",
-      "How much is the tasting menu?",
-      "Do you have vegan options?",
-      "Talk to a human",
-    ],
-    services: servicesFor("restaurants"),
     seed: [
-      msg("restaurants-1", "customer", "Hi! Can I book a table for 2 tonight?", "18:20"),
+      msg("real-estate-1", "customer", "Hi, how much is the 2-bed apartment per month?", "14:05"),
       msg(
-        "restaurants-2",
+        "real-estate-2",
         "business",
-        "Of course! A table for 2 for dinner is free to reserve. Our chef's tasting menu is $65 per person — shall I book you for 7:00 PM tonight?",
-        "18:20",
+        "Hello! The 2-bed luxury apartment is $2,400 per month. A tour is free, and so is a valuation call. Would you like to book a tour?",
+        "14:05",
       ),
-      msg("restaurants-3", "customer", "Yes, 7 PM works. Do you have vegan options?", "18:21"),
+      msg("real-estate-3", "customer", "Yes please, tomorrow if possible.", "14:06"),
       msg(
-        "restaurants-4",
+        "real-estate-4",
         "business",
-        "Perfect — table for 2 tonight at 7:00 PM is confirmed. Yes, we have a full vegan menu, just tell your server when you arrive.",
-        "18:21",
+        "Done — I have pencilled in a tour tomorrow at 11:00 AM. Our agent will meet you at the building entrance.",
+        "14:06",
       ),
     ],
   },
   {
     slug: "salons",
-    name: "Glow Studio Salon",
+    name: "Velour Salon & Spa",
     industry: "Salons",
     icon: "💇",
     tagline: "Skin, hair and colour — booked in seconds.",
-    hours: "Tue–Sun, 10:00 AM – 8:00 PM",
+    hours: "Tue–Sun, 10:00 AM – 8:00 PM (Mon closed)",
     quickReplies: [
       "How much is a Hydrafacial?",
       "Book an appointment",
       "What are your hours?",
       "Talk to a human",
     ],
-    services: servicesFor("salons"),
+    services: [
+      { name: "Haircut + styling", price: "$65" },
+      { name: "Hair color", price: "$120 onwards" },
+      { name: "Signature Hydrafacial", price: "$95" },
+      { name: "Bridal package", price: "$450" },
+      { name: "Manicure + pedicure", price: "$70" },
+      { name: "Head massage + spa", price: "$85" },
+      { name: "Keratin treatment", price: "$220" },
+    ],
     seed: [
       msg("salons-1", "customer", "Hi! How much is a Hydrafacial?", "11:40"),
       msg(
         "salons-2",
         "business",
-        "Hi! Our signature Hydrafacial is $95. A cut + blow-dry is $60 and balayage colour is $140. Would you like to book a Hydrafacial?",
+        "Hi! Our signature Hydrafacial is $95. A haircut + styling is $65 and hair color starts at $120. Would you like to book a Hydrafacial?",
         "11:40",
       ),
       msg("salons-3", "customer", "Yes — do you have anything tomorrow afternoon?", "11:41"),
@@ -193,94 +178,40 @@ export const DEMO_BUSINESSES: DemoBusiness[] = [
     ],
   },
   {
-    slug: "real-estate",
-    name: "Skyline Property Group",
-    industry: "Real Estate",
-    icon: "🏡",
-    tagline: "Rentals and sales across the city — viewings daily.",
-    hours: "Mon–Sat, 9:00 AM – 7:00 PM",
-    quickReplies: [
-      "How much is the 2-bed apartment?",
-      "Book a viewing",
-      "Is a valuation call free?",
-      "Talk to a human",
-    ],
-    services: servicesFor("real-estate"),
-    seed: [
-      msg("real-estate-1", "customer", "Hi, how much is the 2-bed apartment per month?", "14:05"),
-      msg(
-        "real-estate-2",
-        "business",
-        "Hello! The 2-bed apartment is $2,400 per month. A viewing tour is free, and so is a valuation call. Would you like to book a viewing?",
-        "14:05",
-      ),
-      msg("real-estate-3", "customer", "Yes please, tomorrow if possible.", "14:06"),
-      msg(
-        "real-estate-4",
-        "business",
-        "Done — I have pencilled in a viewing tour tomorrow at 11:00 AM. Our agent will meet you at the building entrance.",
-        "14:06",
-      ),
-    ],
-  },
-  {
-    slug: "auto",
-    name: "Apex Auto Care",
-    industry: "Auto Services",
-    icon: "🔧",
-    tagline: "Honest pricing, same-day service on most jobs.",
-    hours: "Mon–Sat, 8:00 AM – 6:00 PM",
-    quickReplies: [
-      "How much is a full service?",
-      "Book my car in",
-      "What are your hours?",
-      "Talk to a human",
-    ],
-    services: servicesFor("auto"),
-    seed: [
-      msg("auto-1", "customer", "Hi! How much is a full service for my car?", "08:30"),
-      msg(
-        "auto-2",
-        "business",
-        "Hi! A full service + MOT check is $149. An oil change is $59 and brake pads replacement is $189. What would you like to book?",
-        "08:30",
-      ),
-      msg("auto-3", "customer", "The full service, please. Any slots tomorrow?", "08:32"),
-      msg(
-        "auto-4",
-        "business",
-        "Yes — I can book the full service ($149) for tomorrow at 9:00 AM. Drop the car off any time from 8:30 AM.",
-        "08:32",
-      ),
-    ],
-  },
-  {
     slug: "online-stores",
-    name: "Everline Store",
+    name: "Kinetix Gear",
     industry: "Online Stores",
     icon: "🛍️",
     tagline: "Everyday essentials, shipped fast — tracked at every step.",
-    hours: "Online 24/7 — orders ship Mon–Sat",
+    hours: "Support every day, 9:00 AM – 9:00 PM",
     quickReplies: [
       "Where is my order?",
-      "How much is express delivery?",
+      "How long is delivery?",
       "Do you take returns?",
       "Talk to a human",
     ],
-    services: servicesFor("online-stores"),
+    services: [
+      { name: "Wireless headphones", price: "$79" },
+      { name: "Smartwatch", price: "$129" },
+      { name: "Running shoes", price: "$119" },
+      { name: "Yoga mat", price: "$45" },
+      { name: "Travel backpack", price: "$89" },
+      { name: "Bluetooth speaker", price: "$59" },
+      { name: "UV sunglasses", price: "$39" },
+    ],
     seed: [
-      msg("online-stores-1", "customer", "Hi! Where is my order #EV-1042?", "13:15"),
+      msg("online-stores-1", "customer", "Hi! Where is my order #KX-8492?", "13:15"),
       msg(
         "online-stores-2",
         "business",
-        "Hi there! Order #EV-1042 is out for delivery and should arrive today by 6:00 PM. Standard delivery is $4.99 and express is $9.99. Anything else I can help with?",
+        "Hi there! Order #KX-8492 is out for delivery and should arrive today by 5:00 PM. Delivery is free above $50. Anything else I can help with?",
         "13:15",
       ),
       msg("online-stores-3", "customer", "Can I return something if it doesn't fit?", "13:16"),
       msg(
         "online-stores-4",
         "business",
-        "Of course — returns are free within 30 days, no questions asked. I can start a return for you any time, just share the order number.",
+        "Of course — returns are free within 7 days, no questions asked. I can start a return for you any time, just share the order number.",
         "13:16",
       ),
     ],
@@ -336,7 +267,9 @@ export function seedThreads(): Record<string, ChatMessage[]> {
   return out;
 }
 
-/** Keyword reply engine, grounded in the active business's services, prices and hours. */
+/** Keyword reply engine, grounded in the active business's services, prices and hours.
+ *  This is the LOCAL fallback for the /demo simulator — the live path is
+ *  /api/demo-chat (deterministic engine → Gemini → Pollinations). */
 export function generateReply(
   business: DemoBusiness,
   input: string,
@@ -357,18 +290,23 @@ export function generateReply(
     };
   }
 
-  if (/book|appointment|reserve|schedule|slot|viewing|table|room for|book my|book a|book an/.test(lower)) {
+  if (/book|appointment|reserve|schedule|slot|viewing|tour|table|room for|book my|book a|book an/.test(lower)) {
     const service = matchedService ?? business.services[0];
-    // Hotels book stays (dates + nights), never a clock time.
-    if (business.slug === "hotels") {
-      const stay = hotelStay();
+    // Real estate books free tours (the property price is shown, not charged).
+    if (business.slug === "real-estate") {
       return {
-        text: `Done — I have held the ${service.name} for ${stay.dateTime}. Check-in is from 3:00 PM. You will get a confirmation and a reminder before your stay.`,
-        booking: { service: service.name, dateTime: stay.dateTime, amount: service.price, ref, label: stay.label },
+        text: `Done — I have provisionally booked a tour for the ${service.name} for tomorrow at 11:00 AM. The tour is free — the property is ${service.price}. Our agent will confirm shortly and share the location pin.`,
+        booking: { service: `Tour — ${service.name}`, dateTime: "Tomorrow, 11:00 AM", amount: "Free tour", ref, label: "Tour" },
       };
     }
-    const dateTime =
-      business.slug === "restaurants" ? "Tonight, 7:00 PM" : "Tomorrow, 10:00 AM";
+    // Online stores schedule a delivery slot for the product.
+    if (business.slug === "online-stores") {
+      return {
+        text: `Done — I have scheduled a delivery slot for the ${service.name} (${service.price}) for tomorrow at 11:00 AM. Delivery is free above $50, and returns are free within 7 days.`,
+        booking: { service: `Delivery — ${service.name}`, dateTime: "Tomorrow, 11:00 AM", amount: service.price, ref, label: "Delivery slot" },
+      };
+    }
+    const dateTime = "Tomorrow, 10:00 AM";
     return {
       text: `Done — I have booked the ${service.name} for ${dateTime}. You will get a confirmation and a reminder before your slot.`,
       booking: { service: service.name, dateTime, amount: service.price, ref },
@@ -392,9 +330,29 @@ export function generateReply(
     };
   }
 
-  if (/vegan|vegetarian|menu|special|dish/.test(lower) && business.slug === "restaurants") {
+  if (/track|where is my order|order status|delivery status/.test(lower) && business.slug === "online-stores") {
+    const mOrder = input.match(/#[A-Za-z]{2}-\d{4}/);
+    const oid = mOrder ? mOrder[0] : "your order";
     return {
-      text: "Yes — we have a full vegan and vegetarian menu, including a vegan tasting menu. The chef's tasting menu is $65 per person. Shall I book a table?",
+      text: `Order ${oid} is out for delivery and should reach you today before 5:00 PM. You will get a text when the courier is nearby. Anything else I can help with?`,
+    };
+  }
+
+  if (/return|refund|exchange/.test(lower)) {
+    return {
+      text: "Returns are free within 7 days of delivery — no questions asked. Refunds go back to your original payment method within 2–3 working days. Want me to start a return for an order?",
+    };
+  }
+
+  if (/loan|emi|finance/.test(lower) && business.slug === "real-estate") {
+    return {
+      text: "Yes — we work with major banks for home loans, with pre-approval in 24 hours. Share your budget and I will match the right properties.",
+    };
+  }
+
+  if (/how long.*deliver|delivery time|shipping time/.test(lower) && business.slug === "online-stores") {
+    return {
+      text: "Delivery takes 2–5 days across the US, and it is free above $50. Your order is tracked at every step — share the order number and I will check it.",
     };
   }
 
@@ -469,27 +427,40 @@ export const VOICE_NOTE_TEXT = "Can I reschedule to 3:00 PM?";
 
 /**
  * Voice-note reschedule — business-aware, and the reply and the booking card
- * always agree on the same time. Hotels move the stay (check-in 3:00 PM, 2
- * nights); everyone else moves the booking to tomorrow at 3:00 PM.
+ * always agree on the same time. Tours and deliveries move to tomorrow at
+ * 3:00 PM, same as appointments.
  */
 export function voiceNoteResponse(business: DemoBusiness): { text: string; booking: BookingDetails } {
   const ref = `DF-${String(Math.floor(100000 + Math.random() * 900000))}`;
-  if (business.slug === "hotels") {
-    const stay = hotelStay();
+  if (business.slug === "real-estate") {
+    const service = business.services[0];
     return {
-      text: `Done — I have moved your stay to check-in tomorrow at 3:00 PM, ${stay.dateTime}. You will get a reminder the day before.`,
+      text: "Done — I have moved your tour to tomorrow at 3:00 PM. The tour is free — our agent will confirm the new time shortly.",
       booking: {
-        service: business.services[0]?.name ?? "Deluxe room (per night)",
-        dateTime: stay.dateTime,
-        amount: business.services[0]?.price ?? "$189",
+        service: `Tour — ${service?.name ?? "2-bed luxury apartment"}`,
+        dateTime: "Tomorrow, 3:00 PM",
+        amount: "Free tour",
         ref,
-        label: stay.label,
+        label: "Tour",
+      },
+    };
+  }
+  if (business.slug === "online-stores") {
+    const service = business.services[0];
+    return {
+      text: "Done — I have moved your delivery slot to tomorrow at 3:00 PM. You will get a reminder one hour before.",
+      booking: {
+        service: `Delivery — ${service?.name ?? "Wireless headphones"}`,
+        dateTime: "Tomorrow, 3:00 PM",
+        amount: service?.price ?? "$79",
+        ref,
+        label: "Delivery slot",
       },
     };
   }
   const service = business.services[0];
   return {
-    text: `Done — I have moved your booking to tomorrow at 3:00 PM. You will get a reminder one hour before.`,
+    text: "Done — I have moved your booking to tomorrow at 3:00 PM. You will get a reminder one hour before.",
     booking: {
       service: service?.name ?? "Appointment",
       dateTime: "Tomorrow, 3:00 PM",

@@ -64,7 +64,7 @@ export default function SandboxPage() {
   const suggestions = [
     "How much is a teeth cleaning?",
     "What are your opening hours?",
-    "I'd like to book a whitening session",
+    "I'd like to book teeth whitening",
     "What is your cancellation policy?",
   ];
 

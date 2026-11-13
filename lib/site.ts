@@ -63,8 +63,8 @@ export const INDUSTRIES: Industry[] = [
   {
     slug: "dental", name: "Dental Clinics", icon: "🦷",
     blurb: "Appointments, services and patient enquiries — answered instantly, even at 2 AM.",
-    useCases: ["Book cleanings, check-ups and whitening", "Answer treatment + price questions", "Send reminders and reduce no-shows", "Escalate emergencies to staff"],
-    sampleServices: [{ name: "Teeth cleaning / scaling", price: "$120" }, { name: "Check-up + X-ray", price: "$85" }, { name: "Whitening session", price: "$199" }],
+    useCases: ["Book cleanings, consultations and whitening", "Answer treatment + price questions", "Send reminders and reduce no-shows", "Escalate emergencies to staff"],
+    sampleServices: [{ name: "Teeth cleaning / scaling", price: "$120" }, { name: "Consultation", price: "$40" }, { name: "Teeth whitening", price: "$199" }],
   },
   {
     slug: "hotels", name: "Hotels", icon: "🏨",
@@ -82,13 +82,13 @@ export const INDUSTRIES: Industry[] = [
     slug: "salons", name: "Salons", icon: "💇",
     blurb: "Service prices, schedules and appointments — booked while your stylists are busy.",
     useCases: ["Quote cut, colour + treatment prices", "Book with a preferred stylist", "Fill last-minute gaps automatically", "Remind clients before their slot"],
-    sampleServices: [{ name: "Signature Hydrafacial", price: "$95" }, { name: "Cut + blow-dry", price: "$60" }, { name: "Balayage colour", price: "$140" }],
+    sampleServices: [{ name: "Signature Hydrafacial", price: "$95" }, { name: "Haircut + styling", price: "$65" }, { name: "Hair color", price: "$120 onwards" }],
   },
   {
     slug: "real-estate", name: "Real Estate", icon: "🏡",
     blurb: "Property enquiries, lead capture and viewing requests — every lead answered in seconds.",
     useCases: ["Share listings + prices instantly", "Book property viewings", "Qualify buyers vs renters", "Hand hot leads to an agent"],
-    sampleServices: [{ name: "2-bed apartment (per month)", price: "$2,400" }, { name: "Viewing tour", price: "Free" }, { name: "Valuation call", price: "Free" }],
+    sampleServices: [{ name: "2-bed luxury apartment", price: "$2,400/mo" }, { name: "3-bed luxury apartment", price: "$3,800/mo" }, { name: "1-bed apartment", price: "$1,850/mo" }],
   },
   {
     slug: "auto", name: "Auto Services", icon: "🔧",
@@ -100,7 +100,7 @@ export const INDUSTRIES: Industry[] = [
     slug: "online-stores", name: "Online Stores", icon: "🛍️",
     blurb: "Order questions, delivery updates and product enquiries — answered while you pack orders.",
     useCases: ["Answer order status + tracking questions", "Share delivery times and shipping costs", "Handle returns and exchanges", "Recommend products and upsell at checkout"],
-    sampleServices: [{ name: "Standard delivery", price: "$4.99" }, { name: "Express delivery", price: "$9.99" }, { name: "Product enquiry", price: "Free" }],
+    sampleServices: [{ name: "Wireless headphones", price: "$79" }, { name: "Smartwatch", price: "$129" }, { name: "Running shoes", price: "$119" }],
   },
 ];
 

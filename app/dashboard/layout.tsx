@@ -59,7 +59,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <div className="flex min-w-0 items-center gap-2">
             <span className="badge-demo shrink-0">Demo workspace — demo data</span>
             <span className="hidden truncate text-xs text-slate-500 md:inline">
-              BrightSmile Dental Studio (demo) · No real customers
+              Demo workspace · No real customers
             </span>
           </div>
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
