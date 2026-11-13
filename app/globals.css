@@ -45,6 +45,9 @@ body { @apply bg-white text-ink-950 font-sans antialiased; }
 .anim-shake { animation: gentleShake 4s ease-in-out infinite; transform-origin: center; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+/* Visible keyboard focus everywhere (audit #22): nav links, buttons and
+   the mobile menu button had no :focus-visible style. Brand-600 outline. */
+:focus-visible { outline: 2px solid #059669; outline-offset: 2px; border-radius: 4px; }
 /* Promo pill reserve (audit #3): while the mobile 50% OFF pill is up, the
    page gets bottom padding on small screens so no CTA can sit under it. */
 @media (max-width: 767px) {

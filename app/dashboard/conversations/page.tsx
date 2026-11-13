@@ -126,6 +126,7 @@ export default function ConversationsPage() {
               <div className="flex min-w-0 gap-2 border-t border-slate-200 px-4 py-3">
                 <input
                   className="input min-w-0 flex-1" placeholder={selected.takenOver ? "Reply as staff…" : "Reply as AI…"} value={reply}
+                  aria-label={selected.takenOver ? "Reply as staff" : "Reply as AI"}
                   onChange={(e) => setReply(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") sendReply(); }}
                 />

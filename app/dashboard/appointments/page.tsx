@@ -122,16 +122,16 @@ export default function AppointmentsPage() {
         <div className="card card-pad lg:col-span-2">
           <h2 className="font-display text-lg font-bold text-ink-950">Add appointment</h2>
           <div className="mt-4 space-y-3">
-            <input className="input" placeholder="Customer name (fictional demo only)" value={customer} onChange={(e) => setCustomer(e.target.value)} />
-            <select className="input" value={service} onChange={(e) => { setService(e.target.value); const s = ws.services.find((x) => x.name === e.target.value); if (s) setAmount(String(s.price)); }}>
+            <input className="input" placeholder="Customer name (fictional demo only)" value={customer} onChange={(e) => setCustomer(e.target.value)} aria-label="Customer name" />
+            <select className="input" value={service} aria-label="Service" onChange={(e) => { setService(e.target.value); const s = ws.services.find((x) => x.name === e.target.value); if (s) setAmount(String(s.price)); }}>
               <option value="">Select a service…</option>
               {ws.services.map((s) => <option key={s.id} value={s.name}>{s.name} — ${s.price}</option>)}
             </select>
             <div className="flex gap-2">
-              <input className="input min-w-0 flex-1" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-              <input className="input w-32 min-w-0 shrink-0" placeholder="10:00 AM" value={time} onChange={(e) => setTime(e.target.value)} />
+              <input className="input min-w-0 flex-1" type="date" value={date} onChange={(e) => setDate(e.target.value)} aria-label="Appointment date" />
+              <input className="input w-32 min-w-0 shrink-0" placeholder="10:00 AM" value={time} onChange={(e) => setTime(e.target.value)} aria-label="Appointment time" />
             </div>
-            <input className="input" type="number" min={0} placeholder="Amount $ (auto-filled from service)" value={amount} onChange={(e) => setAmount(e.target.value)} />
+            <input className="input" type="number" min={0} placeholder="Amount $ (auto-filled from service)" value={amount} onChange={(e) => setAmount(e.target.value)} aria-label="Amount in USD" />
             {formError && (
               <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{formError}</p>
             )}

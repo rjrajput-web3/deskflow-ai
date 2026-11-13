@@ -2,7 +2,6 @@ import { DEMO_REVENUE, DEMO_TENANTS } from "@/lib/demo-workspace";
 import { PLANS } from "@/lib/site";
 
 export default function RevenuePage() {
-  const maxRev = Math.max(...DEMO_REVENUE.map((m) => m.demoRevenue), 1);
   // Demo "potential" MRR: list prices of active demo tenants (no money moves).
   const potentialMrr = DEMO_TENANTS.filter((t) => t.status === "Active").reduce((sum, t) => {
     const plan = PLANS.find((p) => p.name === t.plan);
@@ -41,23 +40,34 @@ export default function RevenuePage() {
       <div className="card card-pad">
         <h2 className="font-display text-lg font-bold text-ink-950">Monthly revenue — demo ($0 every month)</h2>
         <p className="mt-1 text-xs text-slate-500">
-          Bars show real collected revenue (zero). The workspace count line shows demo growth.
+          Real collected revenue is $0 in every month. Demo workspace count is a
+          separate column — it is not money.
         </p>
-        <div className="mt-6 flex h-40 items-end gap-2">
-          {DEMO_REVENUE.map((m) => (
-            <div key={m.month} className="flex flex-1 flex-col items-center gap-1.5" title={`${m.month}: $${m.demoRevenue} real revenue, ${m.workspaces} workspaces`}>
-              <span className="text-[10px] font-semibold text-slate-500">${m.demoRevenue}</span>
-              <div className="flex h-28 w-full items-end justify-center rounded-t-md bg-slate-100">
-                <div className="w-2/3 rounded-t-md bg-brand-500" style={{ height: `${Math.max(4, Math.round((m.workspaces / 6) * 104))}px` }} title={`${m.workspaces} demo workspaces`} />
-              </div>
-              <span className="text-[10px] text-slate-400">{m.month}</span>
-              <span className="text-[10px] font-semibold text-slate-500">{m.workspaces} ws</span>
-            </div>
-          ))}
+        {/* Table, not a bar chart (audit #23): bars whose height tracked
+            workspace count next to "$0" labels read as growing revenue. */}
+        <div className="mt-5 overflow-x-auto">
+          <table className="w-full min-w-[420px] text-left text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
+                <th className="px-4 py-3">Month</th>
+                <th className="px-4 py-3">Real revenue collected</th>
+                <th className="px-4 py-3">Demo workspaces</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {DEMO_REVENUE.map((m) => (
+                <tr key={m.month}>
+                  <td className="px-4 py-3 font-semibold text-ink-950">{m.month}</td>
+                  <td className="px-4 py-3 text-slate-600">${m.demoRevenue}</td>
+                  <td className="px-4 py-3 text-slate-600">{m.workspaces}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <p className="mt-4 text-sm text-slate-600">
-          The shaded bar height tracks demo workspace count, not money — because collected
-          revenue is $0 in every month. Real revenue tracking starts when billing lands.
+          Real revenue tracking starts when billing lands. The workspace count
+          shows demo growth only.
         </p>
       </div>
     </div>

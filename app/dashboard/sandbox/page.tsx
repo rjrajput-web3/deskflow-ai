@@ -123,6 +123,7 @@ export default function SandboxPage() {
             <div className="flex gap-2">
               <input
                 className="input" placeholder="Type a customer message…" value={input}
+                aria-label="Type a customer message"
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") void send(); }}
               />

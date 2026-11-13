@@ -138,7 +138,7 @@ export default function PricingPage() {
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50">
-                <th className="px-5 py-4 font-semibold text-ink-950">Feature</th>
+                <th className="sticky left-0 bg-slate-50 px-5 py-4 font-semibold text-ink-950">Feature</th>
                 {PLANS.map((plan) => (
                   <th key={plan.name} className="px-5 py-4 font-semibold text-ink-950">{plan.name}</th>
                 ))}
@@ -147,7 +147,7 @@ export default function PricingPage() {
             <tbody>
               {COMPARISON.map((row) => (
                 <tr key={row.label} className="border-b border-slate-100 last:border-0">
-                  <td className="px-5 py-3.5 font-medium text-slate-700">{row.label}</td>
+                  <td className="sticky left-0 bg-white px-5 py-3.5 font-medium text-slate-700">{row.label}</td>
                   {row.values.map((value, i) => (
                     <td key={i} className="px-5 py-3.5 text-slate-600">{value}</td>
                   ))}

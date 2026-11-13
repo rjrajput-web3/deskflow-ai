@@ -88,15 +88,15 @@ export default function KnowledgePage() {
         <div className="card card-pad">
           <h2 className="font-display text-lg font-bold text-ink-950">Paste a website URL</h2>
           <p className="mt-1 text-sm text-slate-500">Saved as a reference. Full page fetching is not available in this demo yet.</p>
-          <input className="input mt-4" placeholder="https://yourbusiness.example.com/services" value={url} onChange={(e) => setUrl(e.target.value)} />
+          <input className="input mt-4" placeholder="https://yourbusiness.example.com/services" value={url} onChange={(e) => setUrl(e.target.value)} aria-label="Website URL" />
           <button type="button" className="btn-primary mt-3 w-full !py-2.5 text-sm" onClick={addUrl}>Save URL</button>
         </div>
 
         <div className="card card-pad">
           <h2 className="font-display text-lg font-bold text-ink-950">Paste services / FAQs</h2>
           <p className="mt-1 text-sm text-slate-500">Prices, policies, answers — plain text works best.</p>
-          <input className="input mt-4" placeholder="Title (optional)" value={textTitle} onChange={(e) => setTextTitle(e.target.value)} />
-          <textarea className="input mt-2 min-h-24" placeholder="Paste your service list or FAQs here…" value={textBody} onChange={(e) => setTextBody(e.target.value)} />
+          <input className="input mt-4" placeholder="Title (optional)" value={textTitle} onChange={(e) => setTextTitle(e.target.value)} aria-label="Notes title" />
+          <textarea className="input mt-2 min-h-24" placeholder="Paste your service list or FAQs here…" value={textBody} onChange={(e) => setTextBody(e.target.value)} aria-label="Services or FAQs text" />
           <button type="button" className="btn-primary mt-3 w-full !py-2.5 text-sm" onClick={addText}>Save text</button>
         </div>
 

@@ -41,6 +41,10 @@ export default function DashboardOverview() {
   }
 
   const maxMsg = Math.max(...ws.analytics.map((d) => d.messages), 1);
+  // Time-aware greeting (audit #21): morning / afternoon / evening from the
+  // visitor's local hour — never "Good morning" at 11 PM.
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   const report = `Today at ${ws.businessName}: ${stats.messagesToday} customer messages, ${stats.newLeads} new leads waiting, and ${stats.bookingsToday} bookings on the calendar. Over the last 14 days the AI handled ${stats.totalMessages14} messages, captured ${stats.totalLeads14} leads and made ${stats.totalBookings14} bookings. Average first reply: about ${DEMO_FIRST_REPLY_SECONDS} second (live demo typing delay). Escalated conversations needing staff: ${ws.conversations.filter((c) => c.escalated).length}.`;
 
   const cards = [
@@ -54,7 +58,7 @@ export default function DashboardOverview() {
     <div className="space-y-8">
       <div>
         <span className="badge-demo">Demo workspace — demo data</span>
-        <h1 className="h-display mt-3 text-3xl sm:text-4xl">Good morning, {ws.businessName}</h1>
+        <h1 className="h-display mt-3 text-3xl sm:text-4xl">{greeting}, {ws.businessName}</h1>
         <p className="lead mt-2 text-base">
           Your AI receptionist is on duty. Everything below is fictional demo data — real
           auth + billing arrive after the first sale.
