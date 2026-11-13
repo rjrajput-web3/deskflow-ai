@@ -60,7 +60,7 @@ function Visual({ title }: { title: string }) {
           <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-slate-100 px-4 py-3 text-sm text-slate-700">
             10:30 works for me, thanks!
           </div>
-          <p className="pt-1 text-xs font-semibold text-brand-700">Answered in 4 seconds · 11:42 PM</p>
+          <p className="pt-1 text-xs font-semibold text-brand-700">Answered in ~1 second · 11:42 PM</p>
         </div>
       );
     case "Knowledge Base Training":
@@ -158,7 +158,7 @@ function Visual({ title }: { title: string }) {
           </div>
           <div className="mt-4 space-y-2">
             <div className="h-2 rounded-full bg-slate-100"><div className="h-2 w-3/4 rounded-full bg-brand-600" /></div>
-            <p className="text-xs text-slate-500">Avg. first reply: 6 seconds · 0 missed conversations</p>
+            <p className="text-xs text-slate-500">Avg. first reply: ~1 second (demo) · 0 missed conversations</p>
           </div>
         </div>
       );

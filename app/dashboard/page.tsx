@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getWorkspace, type Workspace } from "@/lib/store";
-import { AVG_FIRST_REPLY_SECONDS } from "@/lib/demo-workspace";
+import { DEMO_FIRST_REPLY_SECONDS } from "@/lib/demo-workspace";
 
 function localISO(d: Date): string {
   const y = d.getFullYear();
@@ -41,13 +41,13 @@ export default function DashboardOverview() {
   }
 
   const maxMsg = Math.max(...ws.analytics.map((d) => d.messages), 1);
-  const report = `Today at ${ws.businessName}: ${stats.messagesToday} customer messages, ${stats.newLeads} new leads waiting, and ${stats.bookingsToday} bookings on the calendar. Over the last 14 days the AI handled ${stats.totalMessages14} messages, captured ${stats.totalLeads14} leads and made ${stats.totalBookings14} bookings. Average first reply: about ${AVG_FIRST_REPLY_SECONDS} seconds. Escalated conversations needing staff: ${ws.conversations.filter((c) => c.escalated).length}.`;
+  const report = `Today at ${ws.businessName}: ${stats.messagesToday} customer messages, ${stats.newLeads} new leads waiting, and ${stats.bookingsToday} bookings on the calendar. Over the last 14 days the AI handled ${stats.totalMessages14} messages, captured ${stats.totalLeads14} leads and made ${stats.totalBookings14} bookings. Average first reply: about ${DEMO_FIRST_REPLY_SECONDS} second (live demo typing delay). Escalated conversations needing staff: ${ws.conversations.filter((c) => c.escalated).length}.`;
 
   const cards = [
     { label: "Messages — last 14 days", value: String(stats.totalMessages14), note: "Same total as Analytics" },
     { label: "Leads — last 14 days", value: String(stats.totalLeads14), note: `${stats.leadsInCrm} leads in the CRM` },
     { label: "Bookings — last 14 days", value: String(stats.totalBookings14), note: `${stats.bookingsToday} today` },
-    { label: "Avg first reply", value: `~${AVG_FIRST_REPLY_SECONDS}s`, note: "Demo average" },
+    { label: "Avg first reply", value: `~${DEMO_FIRST_REPLY_SECONDS}s`, note: "Live demo typing delay" },
   ];
 
   return (

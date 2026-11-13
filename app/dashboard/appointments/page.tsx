@@ -29,7 +29,7 @@ export default function AppointmentsPage() {
     return localISO(d);
   });
 
-  // Opening hours: Mon–Sat 9:00 AM – 6:00 PM, Sun closed.
+  // Opening hours: Mon–Sat 10:00 AM – 8:00 PM, Sun closed (Oakridge seed).
   function hoursError(dateISO: string, timeStr: string): string {
     const d = new Date(dateISO + "T12:00:00");
     if (d.getDay() === 0) return "We are closed on Sundays — pick another day (Mon–Sat).";
@@ -40,8 +40,8 @@ export default function AppointmentsPage() {
     if (/^[Pp]/.test(m[3]) && h !== 12) h += 12;
     if (/^[Aa]/.test(m[3]) && h === 12) h = 0;
     const total = h * 60 + mins;
-    if (total < 9 * 60 || total >= 18 * 60) {
-      return "Outside opening hours — pick a time between 9:00 AM and 6:00 PM.";
+    if (total < 10 * 60 || total >= 20 * 60) {
+      return "Outside opening hours — pick a time between 10:00 AM and 8:00 PM.";
     }
     return "";
   }
@@ -76,7 +76,7 @@ export default function AppointmentsPage() {
 
       <div className="card card-pad">
         <h2 className="font-display text-lg font-bold text-ink-950">This week</h2>
-        <p className="mt-1 text-xs text-slate-500">Opening hours: Mon–Sat 9:00 AM – 6:00 PM, Sun closed.</p>
+        <p className="mt-1 text-xs text-slate-500">Opening hours: Mon–Sat 10:00 AM – 8:00 PM, Sun closed.</p>
         {/* Stacks vertically on phones (no clipped day columns), 7-across on desktop. */}
         <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-7">
           {week.map((day) => {
@@ -136,7 +136,7 @@ export default function AppointmentsPage() {
               <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{formError}</p>
             )}
             <button type="button" className="btn-primary w-full !py-2.5 text-sm" onClick={submit}>+ Add appointment</button>
-            <p className="text-xs text-slate-400">Hours: Mon–Sat 9:00 AM – 6:00 PM, Sun closed. Calendar sync (Google Calendar) is set up after onboarding.</p>
+            <p className="text-xs text-slate-400">Hours: Mon–Sat 10:00 AM – 8:00 PM, Sun closed. Calendar sync (Google Calendar) is set up after onboarding.</p>
           </div>
         </div>
       </div>

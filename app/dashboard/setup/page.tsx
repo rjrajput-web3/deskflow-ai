@@ -20,7 +20,13 @@ export default function BusinessSetupPage() {
   };
 
   const save = () => {
-    saveWorkspace(ws);
+    // FIX (audit #5): the AI answers from ws.hours, so derive it from the
+    // three editable fields on save — otherwise an hours edit never reaches
+    // customers. Format matches the seed: "Mon–Sat, 10:00 AM – 8:00 PM".
+    const hours = `${ws.daysOpen}, ${ws.openTime} – ${ws.closeTime}`;
+    const next = { ...ws, hours };
+    setWs(next);
+    saveWorkspace(next);
     setSaved(true);
   };
 

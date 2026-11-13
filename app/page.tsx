@@ -7,7 +7,7 @@ const METRICS = [
   { value: "24/7", label: "Coverage — nights, weekends, holidays" },
   { value: "7", label: "Industry presets, ready to configure" },
   { value: "7", label: "Steps from signup to live receptionist" },
-  { value: "<10s", label: "First reply in the live demo" },
+  { value: "~1s", label: "First reply in the live demo" },
 ];
 
 export default function Home() {

@@ -269,4 +269,8 @@ export const DEMO_REVENUE: RevenueMonth[] = [
   { month: "Nov", demoRevenue: 0, workspaces: 5 },
 ];
 
-export const AVG_FIRST_REPLY_SECONDS = 38;
+// ONE TRUE RESPONSE TIME (audit #6): the live demo replies after a ~900 ms
+// typing delay, so "~1s" is the only first-reply number the site uses.
+// Home, Features, Dashboard Overview and Analytics all read this constant
+// and label it a demo figure. No invented 4s / 6s / 24s / 38s / 94% anywhere.
+export const DEMO_FIRST_REPLY_SECONDS = 1;

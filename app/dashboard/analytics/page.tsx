@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { getWorkspace, type Workspace } from "@/lib/store";
-import { AVG_FIRST_REPLY_SECONDS } from "@/lib/demo-workspace";
+import { DEMO_FIRST_REPLY_SECONDS } from "@/lib/demo-workspace";
 
 function Bars({ data, color }: { data: Array<{ label: string; value: number }>; color: string }) {
   const max = Math.max(...data.map((d) => d.value), 1);
@@ -103,9 +103,9 @@ export default function AnalyticsPage() {
         <div className="card card-pad">
           <h2 className="font-display text-lg font-bold text-ink-950">Response times</h2>
           <ul className="mt-4 space-y-3 text-sm">
-            <li className="flex justify-between"><span className="text-slate-600">Average first reply</span><strong className="text-ink-950">~{AVG_FIRST_REPLY_SECONDS}s</strong></li>
-            <li className="flex justify-between"><span className="text-slate-600">Median first reply (demo)</span><strong className="text-ink-950">~24s</strong></li>
-            <li className="flex justify-between"><span className="text-slate-600">Replies within 1 minute</span><strong className="text-ink-950">94% (demo)</strong></li>
+            <li className="flex justify-between"><span className="text-slate-600">Average first reply</span><strong className="text-ink-950">~{DEMO_FIRST_REPLY_SECONDS}s (demo)</strong></li>
+            <li className="flex justify-between"><span className="text-slate-600">Median first reply (demo)</span><strong className="text-ink-950">~{DEMO_FIRST_REPLY_SECONDS}s</strong></li>
+            <li className="flex justify-between"><span className="text-slate-600">Replies within 1 minute (demo)</span><strong className="text-ink-950">100% — every demo reply arrives in ~{DEMO_FIRST_REPLY_SECONDS}s</strong></li>
             <li className="flex justify-between"><span className="text-slate-600">Missed messages (14 days)</span><strong className="text-ink-950">0</strong></li>
           </ul>
         </div>
