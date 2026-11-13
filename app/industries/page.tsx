@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { INDUSTRIES } from "@/lib/site";
+import {INDUSTRIES, SITE} from "@/lib/site";
 
 /** Industry -> simulator business (audit #10). Only the four businesses in
  * the simulator deep-link; the rest land on the demo's default business. */
@@ -120,7 +120,7 @@ export default function IndustriesPage() {
             quote prices and book — exactly as it would for your business.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/demo" className="btn-accent">Try Live Demo →</Link>
+            <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent">Try Live Demo →</Link>
             <Link href="/#waitlist" className="btn-ghost !border-slate-600 !bg-transparent !text-white hover:!border-white">Join Waitlist</Link>
           </div>
         </div>

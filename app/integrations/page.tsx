@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import WhatsAppStatus from "@/components/WhatsAppStatus";
+import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Integrations — DeskFlow AI",
@@ -122,7 +123,7 @@ export default function IntegrationsPage() {
             the lead appear in the CRM — all from one conversation.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/demo" className="btn-accent">Try Live Demo →</Link>
+            <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent">Try Live Demo →</Link>
             <Link href="/#waitlist" className="btn-ghost !border-slate-600 !bg-transparent !text-white hover:!border-white">Join Waitlist</Link>
           </div>
         </div>

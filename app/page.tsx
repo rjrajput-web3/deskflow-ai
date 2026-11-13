@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import WaitlistForm from "@/components/WaitlistForm";
-import { FEATURES, INDUSTRIES, ONBOARDING_STEPS, PLANS } from "@/lib/site";
+import {FEATURES, INDUSTRIES, ONBOARDING_STEPS, PLANS, SITE} from "@/lib/site";
 
 const METRICS = [
   { value: "24/7", label: "Coverage — nights, weekends, holidays" },
@@ -26,7 +26,7 @@ export default function Home() {
             team — so no enquiry ever goes unanswered.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/demo" className="btn-accent">Try Live Demo</Link>
+            <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent">Try Live Demo</Link>
             <Link href="/#waitlist" className="btn-ghost">Join Waitlist</Link>
           </div>
           <p className="mt-4 text-sm text-slate-500">
@@ -36,7 +36,7 @@ export default function Home() {
 
         {/* WhatsApp-style preview card (static preview — the interactive simulator lives on /demo) */}
         <div className="anim-fade-up anim-floaty">
-          <Link href="/demo" className="card block overflow-hidden" aria-label="See the live demo">
+          <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="card block overflow-hidden" aria-label="See the live demo">
             <div className="flex items-center gap-3 border-b border-slate-200 bg-[#075E54] px-5 py-3.5 text-white">
               <Image src="/logo.svg" alt="DeskFlow AI" width={40} height={40} className="h-10 w-10 rounded-full" />
               <div>
@@ -222,7 +222,7 @@ export default function Home() {
             Try the live demo now — no login needed — or join the waitlist for your region.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/demo" className="btn-accent">Try Live Demo</Link>
+            <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent">Try Live Demo</Link>
             <Link href="/#waitlist" className="btn-ghost !border-white/30 !bg-transparent !text-white hover:!border-white">
               Join Waitlist
             </Link>

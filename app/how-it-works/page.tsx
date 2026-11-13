@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ONBOARDING_STEPS } from "@/lib/site";
+import {ONBOARDING_STEPS, SITE} from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "How It Works — DeskFlow AI",
@@ -111,7 +111,7 @@ export default function HowItWorksPage() {
             pick your industry and send it a message.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/demo" className="btn-accent">Try Live Demo →</Link>
+            <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent">Try Live Demo →</Link>
             <Link href="/#waitlist" className="btn-ghost !border-slate-600 !bg-transparent !text-white hover:!border-white">Join Waitlist</Link>
           </div>
         </div>

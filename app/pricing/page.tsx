@@ -182,7 +182,7 @@ export default function PricingPage() {
             we&apos;ll help you pick the right plan when your workspace is ready.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/demo" className="btn-accent">Try Live Demo →</Link>
+            <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent">Try Live Demo →</Link>
             <Link href="/#waitlist" className="btn-ghost !border-slate-600 !bg-transparent !text-white hover:!border-white">Join Waitlist</Link>
           </div>
         </div>

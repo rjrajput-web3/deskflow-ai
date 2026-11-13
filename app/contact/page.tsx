@@ -101,7 +101,7 @@ export default function ContactPage() {
                 enquiry that reaches us and reply as soon as we can.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link href="/demo" className="btn-accent">Try Live Demo →</Link>
+                <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent">Try Live Demo →</Link>
                 <button type="button" onClick={handleReset} className="btn-ghost">
                   Send another enquiry
                 </button>
@@ -220,7 +220,7 @@ export default function ContactPage() {
               The live demo shows the receptionist answering, booking and handing off —
               no setup, no account needed.
             </p>
-            <Link href="/demo" className="btn-primary mt-5">Try Live Demo →</Link>
+            <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-primary mt-5">Try Live Demo →</Link>
           </div>
           <div className="card card-pad">
             <h2 className="h-display text-xl">Prefer to explore first?</h2>
@@ -245,7 +245,7 @@ export default function ContactPage() {
             workspace is ready.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/demo" className="btn-accent">Try Live Demo →</Link>
+            <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent">Try Live Demo →</Link>
             <Link href="/#waitlist" className="btn-ghost !border-slate-600 !bg-transparent !text-white hover:!border-white">Join Waitlist</Link>
           </div>
         </div>

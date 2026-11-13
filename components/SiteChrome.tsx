@@ -11,7 +11,7 @@ const PRODUCT_LINKS = [
   { label: "Features", href: "/features" },
   { label: "How It Works", href: "/how-it-works" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Live Demo", href: "/demo" },
+  { label: "Live Demo", href: SITE.demoUrl },
 ];
 
 const RESOURCE_LINKS = [
@@ -40,6 +40,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
               <Link
                 key={link.href}
                 href={link.href}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel={link.href.startsWith("http") ? "noreferrer" : undefined}
                 className="text-sm font-medium text-slate-600 transition hover:text-ink-950"
               >
                 {link.label}
@@ -47,7 +49,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
             ))}
           </nav>
           <div className="hidden items-center gap-3 md:flex">
-            <Link href="/demo" className="btn-accent !px-5 !py-2.5">Try Live Demo</Link>
+            <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent !px-5 !py-2.5">Try Live Demo</Link>
             <Link href="/#waitlist" className="btn-ghost !px-5 !py-2.5">Join Waitlist</Link>
           </div>
           <button
@@ -67,6 +69,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
                 <Link
                   key={link.href}
                   href={link.href}
+                  target={link.href.startsWith("http") ? "_blank" : undefined}
+                  rel={link.href.startsWith("http") ? "noreferrer" : undefined}
                   onClick={() => setMenuOpen(false)}
                   className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-950 transition hover:bg-brand-50"
                 >
@@ -74,7 +78,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
                 </Link>
               ))}
               <div className="mt-3 flex flex-col gap-2">
-                <Link href="/demo" className="btn-accent" onClick={() => setMenuOpen(false)}>Try Live Demo</Link>
+                <Link href={SITE.demoUrl} target="_blank" rel="noreferrer" className="btn-accent" onClick={() => setMenuOpen(false)}>Try Live Demo</Link>
                 <Link href="/#waitlist" className="btn-ghost" onClick={() => setMenuOpen(false)}>Join Waitlist</Link>
               </div>
             </div>
@@ -91,7 +95,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
             <ul className="mt-4 space-y-2.5 text-sm">
               {PRODUCT_LINKS.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="transition hover:text-white">{link.label}</Link>
+                  <Link href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="transition hover:text-white">{link.label}</Link>
                 </li>
               ))}
             </ul>
