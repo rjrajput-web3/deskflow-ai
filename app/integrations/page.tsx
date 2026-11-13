@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import WhatsAppStatus from "@/components/WhatsAppStatus";
 
 export const metadata: Metadata = {
   title: "Integrations — DeskFlow AI",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 type Integration = {
   name: string;
   icon: string;
-  status: "Sandbox ready" | "Demo" | "Roadmap";
+  status: "Not connected" | "Demo" | "Roadmap";
   what: string;
   needs: string;
 };
@@ -20,9 +21,9 @@ const INTEGRATIONS: Integration[] = [
   {
     name: "Meta WhatsApp Cloud API",
     icon: "💬",
-    status: "Sandbox ready",
-    what: "The official channel for your AI receptionist — customer messages arrive over WhatsApp and replies go back through Meta's Cloud API.",
-    needs: "Meta Business account + verified number — your step.",
+    status: "Not connected",
+    what: "The official channel for your AI receptionist — customer messages arrive over WhatsApp and replies go back through Meta's Cloud API. The webhook endpoint below exists as a stub until Meta credentials are connected; the live demo uses a simulated conversation, not Meta.",
+    needs: "Meta Business account + verified number + webhook credentials (verify token, access token, app secret) — your step.",
   },
   {
     name: "Google Calendar",
@@ -62,7 +63,7 @@ const INTEGRATIONS: Integration[] = [
 ];
 
 function StatusBadge({ status }: { status: Integration["status"] }) {
-  if (status === "Sandbox ready") return <span className="badge-live">● Sandbox ready</span>;
+  if (status === "Not connected") return <span className="badge-demo">● Not connected</span>;
   if (status === "Roadmap") return <span className="badge-demo">● Roadmap — not live yet</span>;
   return <span className="badge-demo">● Demo</span>;
 }
@@ -91,7 +92,7 @@ export default function IntegrationsPage() {
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-2xl">
                 {integration.icon}
               </span>
-              <StatusBadge status={integration.status} />
+              {integration.name === "Meta WhatsApp Cloud API" ? <WhatsAppStatus /> : <StatusBadge status={integration.status} />}
             </div>
             <h2 className="h-display mt-5 text-xl">{integration.name}</h2>
             <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">{integration.what}</p>

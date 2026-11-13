@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import WhatsAppStatus from "@/components/WhatsAppStatus";
 
 const N8N_KEY = "deskflow-demo-n8n-webhook";
 
@@ -56,14 +57,15 @@ export default function DashboardIntegrationsPage() {
         <div className="card card-pad">
           <div className="flex items-start justify-between gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-2xl">💬</span>
-            <span className="badge-live">● Sandbox ready</span>
+            <WhatsAppStatus />
           </div>
           <h2 className="h-display mt-5 text-xl">Meta WhatsApp Cloud API</h2>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            The official channel for your AI receptionist. Incoming WhatsApp messages
-            arrive at this webhook endpoint — it verifies and logs them (try it from
-            the Docs sandbox guide). Your own number connects through Meta onboarding
-            after you sign up.
+            The official channel for your AI receptionist. The webhook endpoint
+            below exists as a stub: it verifies a subscription challenge once a
+            verify token is set and logs incoming payloads, but nothing is
+            connected to Meta yet, so no messages are replied to here. Your own
+            number connects through Meta onboarding after you sign up.
           </p>
           <p className="mt-4 break-all rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-700">
             <span className="font-semibold text-ink-950">Webhook URL: </span>
