@@ -8,7 +8,14 @@
 
 import { NextResponse } from "next/server";
 
-type ServiceInput = { name: string; price: number };
+type ServiceInput = { name: string; price: number | string };
+
+// Prices arrive as "$120" strings from the dashboard store or as numbers —
+// never print "$$120".
+function fmtPrice(price: number | string): string {
+  const raw = String(price).trim();
+  return raw.startsWith("$") ? raw : `$${raw}`;
+}
 
 function mockReply(
   message: string,
@@ -18,11 +25,11 @@ function mockReply(
   hours: string,
 ): string {
   const msg = message.toLowerCase();
-  const list = services.map((s) => `${s.name} — $${s.price}`).join("; ");
+  const list = services.map((s) => `${s.name} — ${fmtPrice(s.price)}`).join("; ");
 
   const priceHit = services.find((s) => msg.includes(s.name.toLowerCase().split(" ")[0]) || msg.includes(s.name.toLowerCase()));
   if (/price|cost|much|charge|fee/.test(msg) && priceHit) {
-    return `Our ${priceHit.name} is $${priceHit.price}. Would you like me to book a slot for you?`;
+    return `Our ${priceHit.name} is ${fmtPrice(priceHit.price)}. Would you like me to book a slot for you?`;
   }
   if (/price|cost|much|charge/.test(msg)) {
     return `Here are our prices: ${list}. Which service would you like to book?`;
@@ -57,7 +64,7 @@ export async function POST(req: Request) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (apiKey) {
-      const serviceList = services.map((s) => `- ${s.name}: $${s.price}`).join("\n");
+      const serviceList = services.map((s) => `- ${s.name}: ${fmtPrice(s.price)}`).join("\n");
       const prompt = [
         `You are the AI receptionist for ${businessName}.`,
         `Opening hours: ${hours}.`,
