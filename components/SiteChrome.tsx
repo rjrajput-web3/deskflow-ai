@@ -144,6 +144,9 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
         <div className="border-t border-white/10">
           <div className="container-x flex flex-col gap-2 py-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 DeskFlow AI. All rights reserved.</p>
+            <a href="https://fazier.com" target="_blank" rel="noopener noreferrer" aria-label="Launched on Fazier">
+              <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" alt="Launched on Fazier" width="120" height="40" />
+            </a>
             <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <span>Demo data is clearly labelled where simulated.</span>
               <Link href="/terms" className="transition hover:text-white">Terms</Link>
